@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas/android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        tools:context=".AddEditSymTraxActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/pick_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date" />
+
+            <EditText
+                android:id="@+id/etDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/pick_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time" />
+
+            <EditText
+                android:id="@+id/etTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/container_symptom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                android:id="@+id/tv_symptom"
+                style="@style/CategoryStyle"
+                android:text="@string/symptom" />
+
+            <Spinner
+                android:id="@+id/sp_symptom"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:spinnerMode="dropdown"
+                android:visibility="visible" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/container_severity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                android:id="@+id/tv_severity"
+                style="@style/CategoryStyle"
+                android:text="@string/severity" />
+
+            <Spinner
+                android:id="@+id/sp_severity"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:spinnerMode="dropdown"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container_trigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                android:id="@+id/tv_trigger"
+                android:text="@string/trigger"
+                style="@style/CategoryStyle"/>
+
+            <EditText
+                android:id="@+id/trigger"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="@string/trigger_hint"
+                android:inputType="text|textCapSentences|textMultiLine"
+                style="@style/EditTextHintStyle"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/container_Emotion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                android:id="@+id/tv_emotion"
+                style="@style/CategoryStyle"
+                android:text="@string/emotion" />
+
+            <Spinner
+                android:id="@+id/sp_Emotion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:spinnerMode="dropdown"
+                android:visibility="visible" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/container_observation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                android:id="@+id/tv_observation"
+                android:text="@string/observation"
+                style="@style/CategoryStyle"/>
+
+            <EditText
+                android:id="@+id/observation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="@string/observation_hint"
+                android:inputType="text|textCapSentences|textMultiLine"
+                style="@style/EditTextHintStyle"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/container_outcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                android:id="@+id/tv_outcome"
+                android:text="@string/outcome"
+                style="@style/CategoryStyle"/>
+
+            <EditText
+                android:id="@+id/outcome"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="@string/outcome_hint"
+                android:inputType="text|textCapSentences|textMultiLine"
+                style="@style/EditTextHintStyle"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</ScrollView>

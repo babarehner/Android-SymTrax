@@ -1,7 +1,22 @@
 <resources>
-    <string name="app_name">SymTrax 0.2.0</string>
+    <string name="app_name">SymTrax 0.4.0</string>
     <string name="action_settings">Settings</string>
 
     <!-- Subtitle text for the empty view that prompts the user to add a machine/item [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Please get started adding some symptom tracking data by clicking on the button below.</string>
+
+    <!-- activity_add_edit_symtrax strings -->
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="symptom">Symptom:</string>
+    <string name="severity">Severity:</string>
+    <string name="trigger">Trigger:</string>
+    <string name="trigger_hint">If known</string>
+    <string name="emotion">Emotion:</string>
+    <string name="observation_hint">Observation or thoughts</string>
+    <string name="observation">Observation:</string>
+    <string name="outcome">Outcome:</string>
+    <string name="outcome_hint">What was the outcome</string>
+
+
 </resources>
