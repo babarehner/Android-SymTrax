@@ -12,16 +12,16 @@ public class SymTraxContract {
     // To prevent someone from accidentally instantiating thecontract class
     private SymTraxContract() { }
 
-    //TODO Determine if the following 4 need to be private or are Public as I believe????
+
     // use package name for convenience for the Content Authority
-    private static final String SYM_TRAX_AUTHORITY = "edu.babarehner.android.symtrax";
+    public static final String SYM_TRAX_AUTHORITY = "edu.babarehner.android.symtrax";
 
     // Use SYM_TRAX_AUTHORITY to create the base of all Uri's which apps use
     // to contact the content provider
-    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" +
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" +
             SYM_TRAX_AUTHORITY);
-    private static final String PATH_SYM_TRAX_TABLE_NAME = "TSymTrax";
-    private static final String PATH_SYMPTOMS_TABLE_NAME ="TSymptoms";
+    public static final String PATH_SYM_TRAX_TABLE_NAME = "TSymTrax";
+    public static final String PATH_SYMPTOMS_TABLE_NAME ="TSymptoms";
 
 
     // Inner class that defines SymTrax table and columns
@@ -59,10 +59,10 @@ public class SymTraxContract {
         public static final String SYMPTOM_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
                 + "/" + SYM_TRAX_AUTHORITY + "/" + PATH_SYMPTOMS_TABLE_NAME;
         // MIME type of the (@link #CONTENT_URI for a single record
-        public static final String SYM_TRAX_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+        public static final String SYMPTOM_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
                 + "/" + SYM_TRAX_AUTHORITY + "/" + PATH_SYM_TRAX_TABLE_NAME;
         // Content URI to access the table data in the provider
-        public static final Uri EQUIP_TYPE_URI = Uri.withAppendedPath(BASE_CONTENT_URI,
+        public static final Uri SYMPTOM_URI = Uri.withAppendedPath(BASE_CONTENT_URI,
                 PATH_SYM_TRAX_TABLE_NAME);
 
         public static final String SYMPTOMS_TABLE_NAME = "TSymptoms";

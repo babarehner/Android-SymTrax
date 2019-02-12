@@ -15,7 +15,7 @@
   * limitations under the License.
   */
 
- package edu.babarehner.android.symtrax;
+ package edu.babarehner.android.symtrax.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
