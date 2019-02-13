@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SymTrax 0.4.0</string>
+    <string name="app_name">SymTrax 0.5.0</string>
     <string name="action_settings">Settings</string>
 
     <!-- Subtitle text for the empty view that prompts the user to add a machine/item [CHAR LIMIT=50] -->
@@ -17,6 +17,8 @@
     <string name="observation">Observation:</string>
     <string name="outcome">Outcome:</string>
     <string name="outcome_hint">What was the outcome</string>
+    <string name="add_edit_sym_trac_activity_title_add_record">Add Record</string>
+    <string name="add_edit_sym_trac_activity_title_edit_record">Edit Record</string>
 
 
 </resources>

@@ -24,7 +24,7 @@
                 android:text="@string/date" />
 
             <EditText
-                android:id="@+id/etDate"
+                android:id="@+id/et_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="false"
@@ -37,7 +37,7 @@
                 android:text="@string/time" />
 
             <EditText
-                android:id="@+id/etTime"
+                android:id="@+id/et_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="false"
@@ -102,7 +102,7 @@
                 style="@style/CategoryStyle"/>
 
             <EditText
-                android:id="@+id/trigger"
+                android:id="@+id/et_trigger"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -147,7 +147,7 @@
                 style="@style/CategoryStyle"/>
 
             <EditText
-                android:id="@+id/observation"
+                android:id="@+id/et_observation"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -170,7 +170,7 @@
                 style="@style/CategoryStyle"/>
 
             <EditText
-                android:id="@+id/outcome"
+                android:id="@+id/et_outcome"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
