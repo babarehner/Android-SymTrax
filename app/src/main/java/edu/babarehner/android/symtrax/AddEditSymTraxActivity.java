@@ -17,11 +17,11 @@
 
 package edu.babarehner.android.symtrax;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -45,10 +45,10 @@ import android.widget.Spinner;
     // load up the Severity Spinner
     public static final CharSequence[] SEVERITY = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     // load up the Emotion Soinner
-    public static final CharSequence[] EMOTIONS = {"None","Anger", "Disgust", "Envy", "Fear",
+    public static final CharSequence[] EMOTIONS = {"None","Anger", "Disgust", "Envy", "Fear (Anxiety)",
             "Happiness", "Jealousy", "Love", "Sadness", "Shame", "Guilt"};
 
-    private Button pickDate, pickTime;
+    private Button mPickDate, mPickTime;
     private EditText etDate, etTime;
     private Spinner spSymptom, spSeverity;
     private EditText etTrigger;
@@ -86,6 +86,8 @@ import android.widget.Spinner;
         }
 
         // grab the views
+        mPickDate = findViewById(R.id.pick_date);
+        mPickTime = findViewById(R.id.pick_time);
         etDate = findViewById(R.id.et_date);
         etTime = findViewById(R.id.et_time);
         spSymptom = findViewById(R.id.sp_symptom);
@@ -108,6 +110,10 @@ import android.widget.Spinner;
         // Load the spinners
         spSeverity = getSpinnerVal(R.id.sp_severity, SEVERITY);
         spEmotion = getSpinnerVal(R.id.sp_Emotion, EMOTIONS);
+
+        //handle the time and date button clicks
+        getDate();
+        getTime();
     }
 
 
@@ -132,6 +138,33 @@ import android.widget.Spinner;
             }
         });
         return sp;
+    }
 
+
+    private void getDate(){
+        mPickDate.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if (mCurrentRecordUri !=null){
+                    mRecordChanged = true;
+                }
+                DialogFragment dateFragment = new DatePickerFragment();
+                dateFragment.show(getSupportFragmentManager(), "date picker");
+            }
+        });
+    }
+
+
+    private void getTime(){
+        mPickTime.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if (mCurrentRecordUri !=null){
+                    mRecordChanged = true;
+                }
+                DialogFragment timeFragment = new TimePickerFragment();
+                timeFragment.show(getSupportFragmentManager(), "time picker");
+            }
+        });
     }
 }
