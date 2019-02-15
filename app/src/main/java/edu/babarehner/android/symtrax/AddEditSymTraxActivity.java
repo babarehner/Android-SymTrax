@@ -17,7 +17,12 @@
 
 package edu.babarehner.android.symtrax;
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
+import android.database.CursorWrapper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,14 +35,25 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import edu.babarehner.android.symtrax.data.SymTraxContract;
 
- public class AddEditSymTraxActivity extends AppCompatActivity {
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_SYMPTOM;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema.SYMPTOM_URI;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema._IDS;
+
+
+ public class AddEditSymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private final String LOG_TAG = AddEditSymTraxActivity.class.getSimpleName();
 
+    public static final int LOADER_SYMTRAX = 0;
+    public static final int LOADER_SYMMTOMS = 1;
+
     private Uri mCurrentRecordUri = null;
+    private Uri mCurrentSymptomUri = null;
 
     static final int SYM_TRAX_LOADER = 1;
     static final int SYMPtOM_LOADER = 2;
@@ -55,6 +71,10 @@ import android.widget.Spinner;
     private Spinner spEmotion;
     private EditText etObservation;
     private EditText etOutcome;
+
+    // see if I can change this to private??
+    public SimpleCursorAdapter mSymptomSpinAdapter;
+    private String mSymptomSpinVal = "";
 
     private boolean mRecordChanged = false;
 
@@ -82,7 +102,7 @@ import android.widget.Spinner;
             setTitle(getString(R.string.add_edit_sym_trac_activity_title_add_record));
         } else {
             setTitle(getString(R.string.add_edit_sym_trac_activity_title_edit_record));
-            //getLoaderManager().initLoader(EXISTING_RECORD_LOADER, null, RecordActivity.this);
+            getLoaderManager().initLoader(LOADER_SYMMTOMS, null, AddEditSymTraxActivity.this);
         }
 
         // grab the views
@@ -107,7 +127,40 @@ import android.widget.Spinner;
         etObservation.setOnTouchListener(mTouchListener);
         etOutcome.setOnTouchListener(mTouchListener);
 
-        // Load the spinners
+        // Load the symptom spinner
+        spSymptom = findViewById(R.id.sp_symptom);
+        Cursor c = getContentResolver().query(
+                SYMPTOM_URI,
+                null,
+                null,
+                null,
+                SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC");
+
+        mSymptomSpinAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_spinner_item,
+                c,
+                new String[]{SymTraxContract.SymptomTableSchema.C_SYMPTOM },
+                new int[] {android.R.id.text1},
+                0);
+
+        mSymptomSpinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spSymptom.setAdapter(mSymptomSpinAdapter);
+        spSymptom.setSelection(0, false);
+
+        spSymptom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                // CursorWrapper required when working with CursorLoader & SQLite DB
+                CursorWrapper cw = (CursorWrapper) parent.getItemAtPosition(pos);
+                mSymptomSpinVal = String.valueOf(cw.getString(1));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //    mSpinVal = "";
+            }
+        });
+
+        // load the rest of the spinners
         spSeverity = getSpinnerVal(R.id.sp_severity, SEVERITY);
         spEmotion = getSpinnerVal(R.id.sp_Emotion, EMOTIONS);
 
@@ -116,10 +169,56 @@ import android.widget.Spinner;
         getTime();
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderID, Bundle bundle){
+        Loader<Cursor> loader = null; // returns null if not either case
+
+        switch (loaderID){
+            case LOADER_SYMTRAX:
+
+                break;
+            case LOADER_SYMMTOMS:
+                String symptomSortOrder = SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC";
+                mCurrentSymptomUri = SYMPTOM_URI;
+                String[] projectionSymptoms = {_IDS, C_SYMPTOM};
+                loader = new CursorLoader(this, mCurrentSymptomUri, projectionSymptoms, null,
+                        null, symptomSortOrder);
+                break;
+        }
+        return loader;
+    }
+
+
+     @Override
+     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+         switch (loader.getId()) {
+             case LOADER_SYMTRAX:
+
+                 break;
+             case LOADER_SYMMTOMS:
+                 mSymptomSpinAdapter.swapCursor(c);
+                 break;
+         }
+     }
+
+
+     @Override
+     public void onLoaderReset(Loader<Cursor> loader) {
+         // If invalid Loader clear data from input field
+         switch (loader.getId()) {
+             case LOADER_SYMTRAX:
+
+                 break;
+             case LOADER_SYMMTOMS:
+                 mSymptomSpinAdapter.swapCursor(null);
+                 break;
+         }
+     }
+
 
     // Load spinners with values from and array and set up Listener
     private Spinner getSpinnerVal(int resourceId, final CharSequence[] cs){
-        Spinner sp = (Spinner)  findViewById(resourceId);
+        Spinner sp = findViewById(resourceId);
         ArrayAdapter<CharSequence> csAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, cs);
         // Specify the layout to use when the list of choices appear
