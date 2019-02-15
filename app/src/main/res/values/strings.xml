@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SymTrax 0.6.0</string>
+    <string name="app_name">SymTrax 0.7.1</string>
     <string name="action_settings">Settings</string>
 
     <!-- Subtitle text for the empty view that prompts the user to add a machine/item [CHAR LIMIT=50] -->

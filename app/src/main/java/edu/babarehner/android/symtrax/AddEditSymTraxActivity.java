@@ -40,7 +40,15 @@ import android.widget.Spinner;
 
 import edu.babarehner.android.symtrax.data.SymTraxContract;
 
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_DATE;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_EMOTION;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_OBSERVATION;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_OUTCOME;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_SEVERITY;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_SYMPTOM;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TIME;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TRIGGER;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema._IDST;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema.SYMPTOM_URI;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema._IDS;
 
@@ -50,10 +58,10 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
     private final String LOG_TAG = AddEditSymTraxActivity.class.getSimpleName();
 
     public static final int LOADER_SYMTRAX = 0;
-    public static final int LOADER_SYMMTOMS = 1;
+    public static final int LOADER_SYMPTOMS = 1;
 
-    private Uri mCurrentRecordUri = null;
-    private Uri mCurrentSymptomUri = null;
+    private Uri mCurrentRecordUri;
+    private Uri mCurrentSymptomUri;
 
     static final int SYM_TRAX_LOADER = 1;
     static final int SYMPtOM_LOADER = 2;
@@ -65,12 +73,12 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
             "Happiness", "Jealousy", "Love", "Sadness", "Shame", "Guilt"};
 
     private Button mPickDate, mPickTime;
-    private EditText etDate, etTime;
+    private EditText mEditDate, mEditTime;
     private Spinner spSymptom, spSeverity;
-    private EditText etTrigger;
+    private EditText mEditTrigger;
     private Spinner spEmotion;
-    private EditText etObservation;
-    private EditText etOutcome;
+    private EditText mEditObservation;
+    private EditText mEditOutcome;
 
     // see if I can change this to private??
     public SimpleCursorAdapter mSymptomSpinAdapter;
@@ -96,46 +104,50 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         Intent intent = getIntent();
         mCurrentRecordUri = intent.getData();
 
+        // intitialize this loader first to load spinner-
+        getLoaderManager().initLoader(LOADER_SYMPTOMS, null, AddEditSymTraxActivity.this);
+
         // if the intent does not contain a single item URI FAB has been cicked
         if (mCurrentRecordUri == null) {
             // set pager header to add record
             setTitle(getString(R.string.add_edit_sym_trac_activity_title_add_record));
         } else {
             setTitle(getString(R.string.add_edit_sym_trac_activity_title_edit_record));
-            getLoaderManager().initLoader(LOADER_SYMMTOMS, null, AddEditSymTraxActivity.this);
+            getLoaderManager().initLoader(LOADER_SYMTRAX, null, AddEditSymTraxActivity.this);
         }
 
         // grab the views
         mPickDate = findViewById(R.id.pick_date);
         mPickTime = findViewById(R.id.pick_time);
-        etDate = findViewById(R.id.et_date);
-        etTime = findViewById(R.id.et_time);
+        mEditDate = findViewById(R.id.et_date);
+        mEditTime = findViewById(R.id.et_time);
         spSymptom = findViewById(R.id.sp_symptom);
         spSeverity = findViewById(R.id.sp_severity);
-        etTrigger = findViewById(R.id.et_trigger);
+        mEditTrigger = findViewById(R.id.et_trigger);
         spEmotion = findViewById(R.id.sp_Emotion);
-        etObservation = findViewById(R.id.et_observation);
-        etOutcome = findViewById(R.id.et_outcome);
+        mEditObservation = findViewById(R.id.et_observation);
+        mEditOutcome = findViewById(R.id.et_outcome);
 
         // Set up Touch Listener on all the input views to see if user touch the view
-        etDate.setOnTouchListener(mTouchListener);
-        etTime.setOnTouchListener(mTouchListener);
+        mEditDate.setOnTouchListener(mTouchListener);
+        mEditTime.setOnTouchListener(mTouchListener);
         spSymptom.setOnTouchListener(mTouchListener);
         spSeverity.setOnTouchListener(mTouchListener);
-        etTrigger.setOnTouchListener(mTouchListener);
+        mEditTrigger.setOnTouchListener(mTouchListener);
         spEmotion.setOnTouchListener(mTouchListener);
-        etObservation.setOnTouchListener(mTouchListener);
-        etOutcome.setOnTouchListener(mTouchListener);
+        mEditObservation.setOnTouchListener(mTouchListener);
+        mEditOutcome.setOnTouchListener(mTouchListener);
 
         // Load the symptom spinner
         spSymptom = findViewById(R.id.sp_symptom);
+        // Get a cursor to hold the data to load the spinner
         Cursor c = getContentResolver().query(
                 SYMPTOM_URI,
                 null,
                 null,
                 null,
-                SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC");
-
+                C_SYMPTOM + " ASC");
+        // load the spin adpater with the data
         mSymptomSpinAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_spinner_item,
                 c,
@@ -175,9 +187,20 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
         switch (loaderID){
             case LOADER_SYMTRAX:
-
+                String[] projectionSymTrax = {_IDST,
+                        C_DATE,
+                        C_TIME,
+                        C_SYMPTOM,
+                        C_SEVERITY,
+                        C_TRIGGER,
+                        C_EMOTION,
+                        C_OBSERVATION,
+                        C_OUTCOME};
+                // new loader for new thread
+                loader = new CursorLoader(this, mCurrentRecordUri, projectionSymTrax, null,
+                        null, null);
                 break;
-            case LOADER_SYMMTOMS:
+            case LOADER_SYMPTOMS:
                 String symptomSortOrder = SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC";
                 mCurrentSymptomUri = SYMPTOM_URI;
                 String[] projectionSymptoms = {_IDS, C_SYMPTOM};
@@ -193,9 +216,45 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
      public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
          switch (loader.getId()) {
              case LOADER_SYMTRAX:
+                 // move to the only row in the cursor
+                 if (c.moveToFirst()){
+                     int dateColIndex = c.getColumnIndex(C_DATE);
+                     int timeColIndex = c.getColumnIndex(C_TIME);
+                     int symptomColIndex = c.getColumnIndex(C_SYMPTOM);
+                     int severityColIndex = c.getColumnIndex(C_SEVERITY);
 
+                     String date = c.getString(dateColIndex);
+                     String time = c.getString(timeColIndex);
+                     String symptom = c.getString(symptomColIndex);
+                     String severity = c.getString(severityColIndex);
+                     String trigger = c.getString(c.getColumnIndex(C_TRIGGER));
+                     String emotion = c.getString(c.getColumnIndex(C_EMOTION));
+                     String observation = c.getString(c.getColumnIndex(C_OBSERVATION));
+                     String outcome = c.getString(c.getColumnIndex(C_OUTCOME));
+
+                     // CursorWrapper required when working with CursorLoader & SQLite DB
+                     // CursorWrapper not required for raw queries
+                     CursorWrapper cw;
+                     int pos = 0;
+                     for (int i = 0; i < spSymptom.getCount(); i++){
+                         cw = (CursorWrapper) spSymptom.getItemAtPosition(i);
+                         if (String.valueOf(cw.getString(1)).equals
+                                 (symptom)){
+                             pos = i;
+                             break;
+                         }
+                     }
+
+                     spSymptom.setSelection(pos);
+
+                     mEditDate.setText(date);
+                     mEditTime.setText(time);
+                     mEditTrigger.setText(trigger);
+                     mEditObservation.setText(observation);
+                     mEditOutcome.setText(outcome);
+                 }
                  break;
-             case LOADER_SYMMTOMS:
+             case LOADER_SYMPTOMS:
                  mSymptomSpinAdapter.swapCursor(c);
                  break;
          }
@@ -207,9 +266,14 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          // If invalid Loader clear data from input field
          switch (loader.getId()) {
              case LOADER_SYMTRAX:
+                 mEditDate.setText("");
+                 mEditTime.setText("");
+                 mEditTrigger.setText("");
+                 mEditObservation.setText("");
+                 mEditOutcome.setText("");
 
                  break;
-             case LOADER_SYMMTOMS:
+             case LOADER_SYMPTOMS:
                  mSymptomSpinAdapter.swapCursor(null);
                  break;
          }

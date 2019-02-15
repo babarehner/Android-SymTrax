@@ -3,8 +3,10 @@ package edu.babarehner.android.symtrax;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.format.DateFormat;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -20,9 +22,9 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dpd = new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
-
-        return dpd;
+        // AlertDialog.THEME extra parameter can be added
+        // DatePickerDialog dpd = new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
+        return new DatePickerDialog(getActivity(),  this, year, month, day);
     }
 
     @Override
