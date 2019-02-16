@@ -60,10 +60,10 @@ public class SymTraxContract {
                 + "/" + SYM_TRAX_AUTHORITY + "/" + PATH_SYMPTOMS_TABLE_NAME;
         // MIME type of the (@link #CONTENT_URI for a single record
         public static final String SYMPTOM_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-                + "/" + SYM_TRAX_AUTHORITY + "/" + PATH_SYM_TRAX_TABLE_NAME;
+                + "/" + SYM_TRAX_AUTHORITY + "/" + PATH_SYMPTOMS_TABLE_NAME;
         // Content URI to access the table data in the provider
         public static final Uri SYMPTOM_URI = Uri.withAppendedPath(BASE_CONTENT_URI,
-                PATH_SYM_TRAX_TABLE_NAME);
+                PATH_SYMPTOMS_TABLE_NAME);
 
         public static final String SYMPTOMS_TABLE_NAME = "TSymptoms";
 

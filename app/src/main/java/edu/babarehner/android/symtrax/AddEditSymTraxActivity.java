@@ -203,7 +203,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
             case LOADER_SYMPTOMS:
                 String symptomSortOrder = SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC";
                 mCurrentSymptomUri = SYMPTOM_URI;
-                String[] projectionSymptoms = {_IDS, C_SYMPTOM};
+                String[] projectionSymptoms = {_IDS, SymTraxContract.SymptomTableSchema.C_SYMPTOM};
                 loader = new CursorLoader(this, mCurrentSymptomUri, projectionSymptoms, null,
                         null, symptomSortOrder);
                 break;

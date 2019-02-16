@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">SymTrax 0.7.1</string>
+    <string name="app_name">SymTrax 0.7.2</string>
     <string name="action_settings">Settings</string>
+    <string name="action_symptoms">Symptoms</string>
 
     <!-- Subtitle text for the empty view that prompts the user to add a machine/item [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Please get started adding some symptom tracking data by clicking on the button below.</string>
@@ -19,6 +20,10 @@
     <string name="outcome_hint">What was the outcome</string>
     <string name="add_edit_sym_trac_activity_title_add_record">Add Record</string>
     <string name="add_edit_sym_trac_activity_title_edit_record">Edit Record</string>
+
+    <!-- activity_symptoms.xml -->
+    <string name="empty_view_equipment_type_text">If there are no Symptoms listed
+    please add some by clicking on the Floating Action Button below.</string>
 
 
 </resources>

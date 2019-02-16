@@ -39,7 +39,7 @@ import edu.babarehner.android.symtrax.data.SymTraxContract;
      @Override
      public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-         final String SQL_CREATE_SYM_TRAX_TABLe_TABLE = "CREATE TABLE " +
+         final String SQL_CREATE_SYM_TRAX_TABLE_TABLE = "CREATE TABLE " +
                  SymTraxContract.SymTraxTableSchema.SYM_TRAX_TABLE_NAME + " (" +
                  SymTraxContract.SymTraxTableSchema._IDST + " INTEGER PRIMARY KEY, " +
                  SymTraxContract.SymTraxTableSchema.C_DATE + " TEXT, " +
@@ -51,16 +51,17 @@ import edu.babarehner.android.symtrax.data.SymTraxContract;
                  SymTraxContract.SymTraxTableSchema.C_OBSERVATION + " TEXT, " +
                  SymTraxContract.SymTraxTableSchema.C_OUTCOME + " TEXT );";
 
-         sqLiteDatabase.execSQL(SQL_CREATE_SYM_TRAX_TABLe_TABLE);
+         sqLiteDatabase.execSQL(SQL_CREATE_SYM_TRAX_TABLE_TABLE);
 
-         final String SQL_CREATE_SYMPTOMs_TABLE = "CREATE TABLE " +
+         final String SQL_CREATE_SYMPTOMS_TABLE = "CREATE TABLE " +
                  SymTraxContract.SymptomTableSchema.SYMPTOMS_TABLE_NAME + " (" +
                  SymTraxContract.SymptomTableSchema._IDS + " INTEGER PRIMARY KEY, " +
                  SymTraxContract.SymptomTableSchema.C_SYMPTOM + " TEXT );";
 
-         sqLiteDatabase.execSQL(SQL_CREATE_SYMPTOMs_TABLE);
+         sqLiteDatabase.execSQL(SQL_CREATE_SYMPTOMS_TABLE);
 
          String[] symptoms = {"BP High", "Feel Faint", "Resting Heart Rate High"};
+
 
          for (String each : symptoms) {
              sqLiteDatabase.execSQL("INSERT INTO " + SymTraxContract.SymptomTableSchema.SYMPTOMS_TABLE_NAME
@@ -68,6 +69,7 @@ import edu.babarehner.android.symtrax.data.SymTraxContract;
                      + " VALUES( "
                      + "'" + each + "'" + ");");
          }
+
      }
 
 

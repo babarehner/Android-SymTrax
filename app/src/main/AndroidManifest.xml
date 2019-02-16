@@ -30,6 +30,15 @@
                 android:value=".AddEditSymTraxActivity" />
         </activity>
 
+        <activity
+            android:name=".SymptomActivity"
+            android:parentActivityName=".SymTraxActivity">
+            <!-- Parent activity metadata to support Android 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SymptomActivity" />
+        </activity>
+
         <provider
             android:name=".data.SymTraxProvider"
             android:authorities="edu.babarehner.android.symtrax"
