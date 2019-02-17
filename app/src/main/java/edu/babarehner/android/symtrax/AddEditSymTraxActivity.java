@@ -18,7 +18,9 @@
 package edu.babarehner.android.symtrax;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -27,8 +29,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,6 +44,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import edu.babarehner.android.symtrax.data.SymTraxContract;
 
@@ -48,6 +56,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSc
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_SYMPTOM;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TIME;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TRIGGER;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.SYM_TRAX_URI;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema._IDST;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema.SYMPTOM_URI;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema._IDS;
@@ -74,15 +83,16 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
     private Button mPickDate, mPickTime;
     private EditText mEditDate, mEditTime;
-    private Spinner spSymptom, spSeverity;
+    private Spinner mSpinSymptom, mSpinSeverity;
     private EditText mEditTrigger;
-    private Spinner spEmotion;
+    private Spinner mSpinEmotion;
     private EditText mEditObservation;
     private EditText mEditOutcome;
 
     // see if I can change this to private??
-    public SimpleCursorAdapter mSymptomSpinAdapter;
-    private String mSymptomSpinVal = "";
+    public SimpleCursorAdapter mSpinSymptomAdapter;
+    private String mSpinSymptomVal; // holds the value of the spinner symptom
+    private String[] mSpinVal = {"",""}; // initialization for Serverity, Emotion Spinner Values
 
     private boolean mRecordChanged = false;
 
@@ -94,6 +104,9 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
              return false;
          }
      };
+
+     private ShareActionProvider mShareActionProvider;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,25 +134,25 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         mPickTime = findViewById(R.id.pick_time);
         mEditDate = findViewById(R.id.et_date);
         mEditTime = findViewById(R.id.et_time);
-        spSymptom = findViewById(R.id.sp_symptom);
-        spSeverity = findViewById(R.id.sp_severity);
+        mSpinSymptom = findViewById(R.id.sp_symptom);
+        mSpinSeverity = findViewById(R.id.sp_severity);
         mEditTrigger = findViewById(R.id.et_trigger);
-        spEmotion = findViewById(R.id.sp_Emotion);
+        mSpinEmotion = findViewById(R.id.sp_Emotion);
         mEditObservation = findViewById(R.id.et_observation);
         mEditOutcome = findViewById(R.id.et_outcome);
 
         // Set up Touch Listener on all the input views to see if user touch the view
         mEditDate.setOnTouchListener(mTouchListener);
         mEditTime.setOnTouchListener(mTouchListener);
-        spSymptom.setOnTouchListener(mTouchListener);
-        spSeverity.setOnTouchListener(mTouchListener);
+        mSpinSymptom.setOnTouchListener(mTouchListener);
+        mSpinSeverity.setOnTouchListener(mTouchListener);
         mEditTrigger.setOnTouchListener(mTouchListener);
-        spEmotion.setOnTouchListener(mTouchListener);
+        mSpinEmotion.setOnTouchListener(mTouchListener);
         mEditObservation.setOnTouchListener(mTouchListener);
         mEditOutcome.setOnTouchListener(mTouchListener);
 
         // Load the symptom spinner
-        spSymptom = findViewById(R.id.sp_symptom);
+        mSpinSymptom = findViewById(R.id.sp_symptom);
         // Get a cursor to hold the data to load the spinner
         Cursor c = getContentResolver().query(
                 SYMPTOM_URI,
@@ -148,23 +161,23 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                 null,
                 C_SYMPTOM + " ASC");
         // load the spin adpater with the data
-        mSymptomSpinAdapter = new SimpleCursorAdapter(this,
+        mSpinSymptomAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_spinner_item,
                 c,
                 new String[]{SymTraxContract.SymptomTableSchema.C_SYMPTOM },
                 new int[] {android.R.id.text1},
                 0);
 
-        mSymptomSpinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spSymptom.setAdapter(mSymptomSpinAdapter);
-        spSymptom.setSelection(0, false);
+        mSpinSymptomAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinSymptom.setAdapter(mSpinSymptomAdapter);
+        mSpinSymptom.setSelection(0, false);
 
-        spSymptom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mSpinSymptom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 // CursorWrapper required when working with CursorLoader & SQLite DB
                 CursorWrapper cw = (CursorWrapper) parent.getItemAtPosition(pos);
-                mSymptomSpinVal = String.valueOf(cw.getString(1));
+                mSpinSymptomVal = String.valueOf(cw.getString(1));
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -173,8 +186,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         });
 
         // load the rest of the spinners
-        spSeverity = getSpinnerVal(R.id.sp_severity, SEVERITY);
-        spEmotion = getSpinnerVal(R.id.sp_Emotion, EMOTIONS);
+        mSpinSymptom = getSpinnerVal(R.id.sp_severity, SEVERITY, 0);
+        mSpinEmotion = getSpinnerVal(R.id.sp_Emotion, EMOTIONS, 1);
 
         //handle the time and date button clicks
         getDate();
@@ -236,8 +249,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                      // CursorWrapper not required for raw queries
                      CursorWrapper cw;
                      int pos = 0;
-                     for (int i = 0; i < spSymptom.getCount(); i++){
-                         cw = (CursorWrapper) spSymptom.getItemAtPosition(i);
+                     for (int i = 0; i < mSpinSymptom.getCount(); i++){
+                         cw = (CursorWrapper) mSpinSymptom.getItemAtPosition(i);
                          if (String.valueOf(cw.getString(1)).equals
                                  (symptom)){
                              pos = i;
@@ -245,7 +258,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                          }
                      }
 
-                     spSymptom.setSelection(pos);
+                     mSpinSymptom.setSelection(pos);
 
                      mEditDate.setText(date);
                      mEditTime.setText(time);
@@ -255,7 +268,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                  }
                  break;
              case LOADER_SYMPTOMS:
-                 mSymptomSpinAdapter.swapCursor(c);
+                 mSpinSymptomAdapter.swapCursor(c);
                  break;
          }
      }
@@ -274,14 +287,148 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
                  break;
              case LOADER_SYMPTOMS:
-                 mSymptomSpinAdapter.swapCursor(null);
+                 mSpinSymptomAdapter.swapCursor(null);
                  break;
          }
      }
 
 
-    // Load spinners with values from and array and set up Listener
-    private Spinner getSpinnerVal(int resourceId, final CharSequence[] cs){
+     @Override   // set up the menu the first time
+     public boolean onCreateOptionsMenu(Menu m) {
+         getMenuInflater().inflate(R.menu.menu_add_edit_symtrax_activity, m);
+
+         // relate mShareActionProvider to share e-mail menu item
+         // initialize mShareActionProvider
+         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider
+                 (m.findItem(R.id.action_share_email));
+
+         return true;
+     }
+
+
+     @Override   // hide delete/share menu items when adding a new exercise
+     public boolean onPrepareOptionsMenu(Menu m) {
+         super.onPrepareOptionsMenu(m);
+         // if this is add an exercise, hide "delete" menu item
+
+         if (mCurrentRecordUri == null) {
+             MenuItem deleteItem = m.findItem(R.id.action_delete);
+             deleteItem.setVisible(false);
+             MenuItem shareEMailItem = m.findItem(R.id.action_share_email);
+             shareEMailItem.setVisible(false);
+             MenuItem shareTextItem = m.findItem(R.id.action_share_text);
+             shareTextItem.setVisible(false);
+         }
+         return true;
+     }
+
+
+     @Override        // Select from the options menu
+     public boolean onOptionsItemSelected(MenuItem item) {
+         switch (item.getItemId()) {
+             case R.id.action_save:
+                 saveRecord();
+                 finish();       // exit activity
+                 return true;
+             case R.id.action_share_email:
+                 if (mShareActionProvider != null) {
+                     // returns an intent
+                     //TODO mShareActionProvider.setShareIntent(shareData(SHARE_EMAIL));
+                     boolean x = true;
+                 }
+                 // Intent.createChooser(i, " Create Chooser");
+                 Log.v(LOG_TAG, "in action share EMail after String Builder");
+                 return true;
+             case R.id.action_share_text:
+                 if (mShareActionProvider != null){
+                     // TODO mShareActionProvider.setShareIntent(shareData(SHARE_TEXT));
+                 }
+                 return true;
+             case R.id.action_delete:
+                 // Alert Dialog for deleting one book
+                 // TODO showDeleteConfirmationDialog();
+                 return true;
+             // this is the <- button on the header
+             case android.R.id.home:
+                 // book has not changed
+                 if (!mRecordChanged) {
+                     NavUtils.navigateUpFromSameTask(AddEditSymTraxActivity.this);
+                     return true;
+                 }
+                 // set up dialog to warn user about unsaved changes
+                 DialogInterface.OnClickListener discardButtonClickListener =
+                         new DialogInterface.OnClickListener() {
+                             @Override
+                             public void onClick(DialogInterface dialog, int i) {
+                                 //user click discard. Navigate up to parent activity
+                                 NavUtils.navigateUpFromSameTask(AddEditSymTraxActivity.this);
+                             }
+                         };
+                 // show user they have unsaved changes
+                 //TODO showUnsavedChangesDialog(discardButtonClickListener);
+                 return true;
+         }
+         return super.onOptionsItemSelected(item);
+     }
+
+
+     private void saveRecord() {
+
+         // read from EditText and Spinner input fields
+         String date = mEditDate.getText().toString();
+         String time = mEditTime.getText().toString();
+         String symptom  = mSpinSymptomVal;
+         String severity = mSpinVal[0];
+         String trigger = mEditTrigger.getText().toString().trim();
+         String emotion = mSpinVal[1];
+         String observation = mEditObservation.getText().toString().trim();
+         String outcome = mEditOutcome.getText().toString().trim();
+
+
+
+         ContentValues values = new ContentValues();
+         values.put(C_DATE, date);
+         values.put(C_TIME, time);
+         values.put(SymTraxContract.SymTraxTableSchema.C_SYMPTOM, symptom);
+         values.put(C_SEVERITY, severity);
+         values.put(C_TRIGGER, trigger);
+         values.put(C_EMOTION, emotion);
+         values.put(C_OBSERVATION, observation);
+         values.put(C_OUTCOME, outcome);
+
+         if (mCurrentRecordUri == null) {
+             // a new machine
+             // ***********
+             Log.v(LOG_TAG, "in saveRecord " + SYM_TRAX_URI.toString() + "\n" + values);
+
+             Uri newUri = getContentResolver().insert(SYM_TRAX_URI, values);
+             // ************
+
+             if (newUri == null) {
+                 Toast.makeText(this, getString(R.string.insert_record_failed),
+                         Toast.LENGTH_SHORT).show();
+             } else {
+                 Toast.makeText(this, getString(R.string.insert_record_succeeded),
+                         Toast.LENGTH_SHORT).show();
+             }
+         } else {
+             // existing record so update with content URI and pass in ContentValues
+             int rowsAffected = getContentResolver().update(mCurrentRecordUri, values, null, null);
+             if (rowsAffected == 0) {
+                 // TODO Check db- Text Not Null does not seem to be working or entering todo from PartsRunner
+                 // "" does not mean NOT Null- there must be an error message closer to the db!!!
+                 Toast.makeText(this, getString(R.string.edit_update_record_failed),
+                         Toast.LENGTH_SHORT).show();
+             } else {
+                 Toast.makeText(this, getString(R.string.edit_update_record_success),
+                         Toast.LENGTH_SHORT).show();
+             }
+         }
+     }
+
+
+     // Load spinners with values from an array and set up Listener
+    private Spinner getSpinnerVal(int resourceId, final CharSequence[] cs, final int i){
         Spinner sp = findViewById(resourceId);
         ArrayAdapter<CharSequence> csAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, cs);
@@ -293,7 +440,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
                 Log.v("RecordActivity", selection);
-                // spin_val[i] = selection;
+                mSpinVal[i] = selection;  //tore the selection for future reference
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SymTrax 0.7.2</string>
+    <string name="app_name">SymTrax 0.8.0</string>
     <string name="action_settings">Settings</string>
     <string name="action_symptoms">Symptoms</string>
 
@@ -24,6 +24,14 @@
     <!-- activity_symptoms.xml -->
     <string name="empty_view_equipment_type_text">If there are no Symptoms listed
     please add some by clicking on the Floating Action Button below.</string>
+    <string name="share_email">Share as email</string>
+    <string name="share_text">Share as text message</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="insert_record_failed">Failed to save record</string>
+    <string name="insert_record_succeeded">Record successfully saved</string>
+    <string name="edit_update_record_failed">Failed to update record</string>
+    <string name="edit_update_record_success">Update record succeeded</string>
 
 
 </resources>
