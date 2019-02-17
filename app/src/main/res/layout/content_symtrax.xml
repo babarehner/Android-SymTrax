@@ -20,7 +20,7 @@
     -->
 
     <ListView
-        android:id="@+id/list_machines"
+        android:id="@+id/list_symtrax"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

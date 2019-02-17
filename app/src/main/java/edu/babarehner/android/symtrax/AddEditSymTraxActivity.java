@@ -66,8 +66,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
     private final String LOG_TAG = AddEditSymTraxActivity.class.getSimpleName();
 
-    public static final int LOADER_SYMTRAX = 0;
-    public static final int LOADER_SYMPTOMS = 1;
+    public static final int LOADER_SYMTRAX = 2;
+    public static final int LOADER_SYMPTOMS = 3;
 
     private Uri mCurrentRecordUri;
     private Uri mCurrentSymptomUri;
@@ -83,7 +83,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
     private Button mPickDate, mPickTime;
     private EditText mEditDate, mEditTime;
-    private Spinner mSpinSymptom, mSpinSeverity;
+    private Spinner mSpinSymptom;
+    private Spinner mSpinSeverity;
     private EditText mEditTrigger;
     private Spinner mSpinEmotion;
     private EditText mEditObservation;
@@ -159,7 +160,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                 null,
                 null,
                 null,
-                C_SYMPTOM + " ASC");
+                SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC");
         // load the spin adpater with the data
         mSpinSymptomAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_spinner_item,
@@ -247,10 +248,10 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
                      // CursorWrapper required when working with CursorLoader & SQLite DB
                      // CursorWrapper not required for raw queries
-                     CursorWrapper cw;
+                     // CursorWrapper cw;
                      int pos = 0;
                      for (int i = 0; i < mSpinSymptom.getCount(); i++){
-                         cw = (CursorWrapper) mSpinSymptom.getItemAtPosition(i);
+                         CursorWrapper cw = (CursorWrapper) mSpinSymptom.getItemAtPosition(i);
                          if (String.valueOf(cw.getString(1)).equals
                                  (symptom)){
                              pos = i;
@@ -334,7 +335,6 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                  if (mShareActionProvider != null) {
                      // returns an intent
                      //TODO mShareActionProvider.setShareIntent(shareData(SHARE_EMAIL));
-                     boolean x = true;
                  }
                  // Intent.createChooser(i, " Create Chooser");
                  Log.v(LOG_TAG, "in action share EMail after String Builder");
@@ -350,7 +350,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                  return true;
              // this is the <- button on the header
              case android.R.id.home:
-                 // book has not changed
+                 // record has not changed
                  if (!mRecordChanged) {
                      NavUtils.navigateUpFromSameTask(AddEditSymTraxActivity.this);
                      return true;
@@ -477,4 +477,9 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
             }
         });
     }
+
+
+
+
+
 }

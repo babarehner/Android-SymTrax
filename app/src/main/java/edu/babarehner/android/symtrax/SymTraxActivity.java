@@ -1,6 +1,13 @@
 package edu.babarehner.android.symtrax;
 
+import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.ContentUris;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +15,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-public class SymTraxActivity extends AppCompatActivity {
+import edu.babarehner.android.symtrax.data.SymTraxContract;
+
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_DATE;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TIME;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.SYM_TRAX_URI;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema._IDST;
+
+public class SymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int SYMTRAX_LOADER = 0;
+    SymTraxCursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +48,52 @@ public class SymTraxActivity extends AppCompatActivity {
                 //        .setAction("Action", null).show();
             }
         });
+
+        ListView symtraxListView = (ListView) findViewById(R.id.list_symtrax);
+        View emptyView = findViewById(R.id.empty_subtitle_text);
+        symtraxListView.setEmptyView(emptyView);
+
+        mCursorAdapter = new SymTraxCursorAdapter(this, null);
+        symtraxListView.setAdapter(mCursorAdapter);
+        symtraxListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int pos, long id) {
+                Intent intent = new Intent(SymTraxActivity.this, AddEditSymTraxActivity.class);
+                Uri currentMainUri = ContentUris.withAppendedId(
+                        SYM_TRAX_URI, id);
+                intent.setData(currentMainUri);
+                startActivity(intent);
+            }
+        });
+
+        getLoaderManager().initLoader(SYMTRAX_LOADER, null, this);
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        String[] projection = {_IDST,
+                C_DATE,
+                C_TIME,
+                SymTraxContract.SymTraxTableSchema.C_SYMPTOM};
+
+        return new CursorLoader(this,
+                SYM_TRAX_URI,
+                projection,
+                null,
+                null,
+                C_DATE);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mCursorAdapter.swapCursor(null);
     }
 
     @Override
@@ -49,10 +114,11 @@ public class SymTraxActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.action_symptom_activity){
+        if (id == R.id.action_symptom_activity) {
             Intent intent = new Intent(SymTraxActivity.this, SymptomActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
