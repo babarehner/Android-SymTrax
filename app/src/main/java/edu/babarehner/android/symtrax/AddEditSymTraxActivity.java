@@ -92,7 +92,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
     // see if I can change this to private??
     public SimpleCursorAdapter mSpinSymptomAdapter;
-    private String mSpinSymptomVal; // holds the value of the spinner symptom
+    private String mSpinSymptomVal = ""; // holds the value of the spinner symptom
     private String[] mSpinVal = {"",""}; // initialization for Serverity, Emotion Spinner Values
 
     private boolean mRecordChanged = false;
@@ -177,17 +177,19 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 // CursorWrapper required when working with CursorLoader & SQLite DB
-                CursorWrapper cw = (CursorWrapper) parent.getItemAtPosition(pos);
+                CursorWrapper cw = (CursorWrapper) parent.getItemAtPosition(2);
                 mSpinSymptomVal = String.valueOf(cw.getString(1));
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //    mSpinVal = "";
+                // if nothing chosen set default at position 0
+                CursorWrapper cw = (CursorWrapper) parent.getItemAtPosition(2);
+                mSpinSymptomVal = String.valueOf(cw.getString(1));
             }
         });
 
         // load the rest of the spinners
-        mSpinSymptom = getSpinnerVal(R.id.sp_severity, SEVERITY, 0);
+        mSpinSeverity = getSpinnerVal(R.id.sp_severity, SEVERITY, 0);
         mSpinEmotion = getSpinnerVal(R.id.sp_Emotion, EMOTIONS, 1);
 
         //handle the time and date button clicks
@@ -234,13 +236,13 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                  if (c.moveToFirst()){
                      int dateColIndex = c.getColumnIndex(C_DATE);
                      int timeColIndex = c.getColumnIndex(C_TIME);
-                     int symptomColIndex = c.getColumnIndex(C_SYMPTOM);
+                     int symptomColIndex = c.getColumnIndex(SymTraxContract.SymTraxTableSchema.C_SYMPTOM);
                      int severityColIndex = c.getColumnIndex(C_SEVERITY);
 
                      String date = c.getString(dateColIndex);
                      String time = c.getString(timeColIndex);
                      String symptom = c.getString(symptomColIndex);
-                     String severity = c.getString(severityColIndex);
+                     int severity = c.getInt(severityColIndex);
                      String trigger = c.getString(c.getColumnIndex(C_TRIGGER));
                      String emotion = c.getString(c.getColumnIndex(C_EMOTION));
                      String observation = c.getString(c.getColumnIndex(C_OBSERVATION));
@@ -263,7 +265,13 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
                      mEditDate.setText(date);
                      mEditTime.setText(time);
+                     // value of severity matches spinner pos value
+                     mSpinSeverity.setSelection(severity);
                      mEditTrigger.setText(trigger);
+                     //  create Array Adapter to pull spinner position out from given DB string value
+                     ArrayAdapter emotionAdap = (ArrayAdapter) mSpinEmotion.getAdapter(); //cast to an ArrayAdapter
+                     int emotionPos = emotionAdap.getPosition(emotion);
+                     mSpinEmotion.setSelection(emotionPos);
                      mEditObservation.setText(observation);
                      mEditOutcome.setText(outcome);
                  }
@@ -277,7 +285,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
      @Override
      public void onLoaderReset(Loader<Cursor> loader) {
-         // If invalid Loader clear data from input field
+         // If invalid Loader clear data from input field, Spinners automatically go to top
          switch (loader.getId()) {
              case LOADER_SYMTRAX:
                  mEditDate.setText("");
