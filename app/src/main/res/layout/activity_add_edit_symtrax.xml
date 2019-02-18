@@ -64,7 +64,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:spinnerMode="dropdown"
-                android:visibility="visible" />
+                android:popupBackground="@color/colorPrimaryDark"
+                android:theme="@style/spinnerTheme"
+                android:visibility="visible"
+                />
         </LinearLayout>
 
 

@@ -126,6 +126,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         if (mCurrentRecordUri == null) {
             // set pager header to add record
             setTitle(getString(R.string.add_edit_sym_trac_activity_title_add_record));
+            invalidateOptionsMenu();
         } else {
             setTitle(getString(R.string.add_edit_sym_trac_activity_title_edit_record));
             getLoaderManager().initLoader(LOADER_SYMTRAX, null, AddEditSymTraxActivity.this);
@@ -155,17 +156,22 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
         // Load the symptom spinner
         mSpinSymptom = findViewById(R.id.sp_symptom);
-        // Get a cursor to hold the data to load the spinner
+
+        // Feels like I have to put the following lines in to get correct initialization of
+        // mSpinSymptomAdapter- threading problem.
         Cursor c = getContentResolver().query(
                 SYMPTOM_URI,
                 null,
                 null,
                 null,
                 SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC");
-        // load the spin adpater with the data
+        c.close();
+
+        // Having real problem with spinner, above line stops it in one
+        // program but not the other
         mSpinSymptomAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_spinner_item,
-                c,
+                null,
                 new String[]{SymTraxContract.SymptomTableSchema.C_SYMPTOM },
                 new int[] {android.R.id.text1},
                 0);
@@ -183,7 +189,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //    mSpinVal = "";
+                // CursorWrapper cw = (CursorWrapper) parent.getItemAtPosition(0);
+                // mSpinSymptomVal = String.valueOf(cw.getString(1));
             }
         });
 
