@@ -37,6 +37,13 @@
     <string name="delete_dialog_msg">Delete this record</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="symptom_edit_text">Enter new symptom text</string>
+    <string name="missing_symptom">A value is required to save a new Symptom</string>
+    <string name="symtrax_provider_insert_record_failed">Record save of Symptom failed</string>
+    <string name="symtrax_provider_insert_record_succeeded">Record save of Symptom succeeded</string>
+    <string name="unsaved_changes_dialog_msg">Discard changes and quit editing</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
 
 
 </resources>
