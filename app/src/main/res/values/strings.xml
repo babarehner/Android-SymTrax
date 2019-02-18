@@ -32,6 +32,11 @@
     <string name="insert_record_succeeded">Record successfully saved</string>
     <string name="edit_update_record_failed">Failed to update record</string>
     <string name="edit_update_record_success">Update record succeeded</string>
+    <string name="delete_record_failure">Record not deleted (Error)</string>
+    <string name="delete_record_success">Record deleted</string>
+    <string name="delete_dialog_msg">Delete this record</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

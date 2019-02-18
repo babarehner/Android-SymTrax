@@ -31,6 +31,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -187,7 +188,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         });
 
         // load the rest of the spinners
-        mSpinSymptom = getSpinnerVal(R.id.sp_severity, SEVERITY, 0);
+        mSpinSeverity = getSpinnerVal(R.id.sp_severity, SEVERITY, 0);
         mSpinEmotion = getSpinnerVal(R.id.sp_Emotion, EMOTIONS, 1);
 
         //handle the time and date button clicks
@@ -345,8 +346,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                  }
                  return true;
              case R.id.action_delete:
-                 // Alert Dialog for deleting one book
-                 // TODO showDeleteConfirmationDialog();
+                 // Alert Dialog for deleting one record
+                 showDeleteConfirmationDialog();
                  return true;
              // this is the <- button on the header
              case android.R.id.home:
@@ -424,6 +425,47 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                          Toast.LENGTH_SHORT).show();
              }
          }
+     }
+
+
+     // delete Record from DB
+     private void deleteRecord(){
+         if (mCurrentRecordUri != null) {
+             int rowsDeleted = getContentResolver().delete(mCurrentRecordUri, null, null);
+             if (rowsDeleted == 0) {
+                 Toast.makeText(this, getString(R.string.delete_record_failure),
+                         Toast.LENGTH_SHORT).show();
+             } else {
+                 Toast.makeText(this, getString(R.string.delete_record_success),
+                         Toast.LENGTH_SHORT).show();
+             }
+         }
+         finish();
+     }
+
+
+     private void showDeleteConfirmationDialog() {
+         // Create an AlertDialog.Builder, set message and click
+         // listeners for positive and negative buttons
+         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+         builder.setMessage(R.string.delete_dialog_msg);
+         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+             @Override
+             public void onClick(DialogInterface dialog, int which) {
+                 // User clicked delete so delete
+                 deleteRecord();
+             }
+         });
+         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+             @Override
+             public void onClick(DialogInterface dialog, int which) {
+                 // user clicked cancel, dismiss dialog, continue editing
+                 if (dialog != null) {dialog.dismiss();}
+             }
+         });
+         // Create and show dialog
+         AlertDialog alertD = builder.create();
+         alertD.show();
      }
 
 
