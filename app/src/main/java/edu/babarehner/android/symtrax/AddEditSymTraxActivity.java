@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
@@ -354,7 +355,10 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                  return true;
              case R.id.action_delete:
                  // Alert Dialog for deleting one record
-                 showDeleteConfirmationDialog();
+                 // showDeleteConfirmationDialog();
+                 FragmentManager fm = getSupportFragmentManager();
+                 DeleteConfirmationDialogFragment df = new DeleteConfirmationDialogFragment();
+                 df.show(fm, "fragment alert");
                  return true;
              // this is the <- button on the header
              case android.R.id.home:
@@ -436,7 +440,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
 
      // delete Record from DB
-     private void deleteRecord(){
+     public void deleteRecord(){
          if (mCurrentRecordUri != null) {
              int rowsDeleted = getContentResolver().delete(mCurrentRecordUri, null, null);
              if (rowsDeleted == 0) {
