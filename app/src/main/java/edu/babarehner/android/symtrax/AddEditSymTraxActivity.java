@@ -64,7 +64,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema._IDS;
 
 
- public class AddEditSymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+ public class AddEditSymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+         DialogFragmentUnsavedChanges.DialogClickListener {
 
     private final String LOG_TAG = AddEditSymTraxActivity.class.getSimpleName();
 
@@ -75,12 +76,13 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
     private Uri mCurrentSymptomUri;
 
     static final int SYM_TRAX_LOADER = 1;
+
     static final int SYMPtOM_LOADER = 2;
 
     // load up the Severity Spinner
-    public static final CharSequence[] SEVERITY = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
-    // load up the Emotion Soinner
-    public static final CharSequence[] EMOTIONS = {"None","Anger", "Disgust", "Envy", "Fear (Anxiety)",
+    public static final String [] SEVERITY = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+    // load up the Emotion Spinner
+    public static final String[] EMOTIONS = {"None","Anger", "Disgust", "Envy", "Fear (Anxiety)",
             "Happiness", "Jealousy", "Love", "Sadness", "Shame", "Guilt"};
 
     private Button mPickDate, mPickTime;
@@ -98,6 +100,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
     private String[] mSpinVal = {"",""}; // initialization for Serverity, Emotion Spinner Values
 
     private boolean mRecordChanged = false;
+    private boolean mHomeChecked;
 
      // Touch listener to check if changes made to a record
      private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -166,13 +169,13 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                 null,
                 null,
                 SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC");
-        c.close();
+        // c.close(); gives warning if I don't close it and crashes if I do ??
 
         // Having real problem with spinner, above line stops it in one
         // program but not the other
         mSpinSymptomAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_spinner_item,
-                null,
+                c,
                 new String[]{SymTraxContract.SymptomTableSchema.C_SYMPTOM },
                 new int[] {android.R.id.text1},
                 0);
@@ -249,7 +252,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                      String date = c.getString(dateColIndex);
                      String time = c.getString(timeColIndex);
                      String symptom = c.getString(symptomColIndex);
-                     String severity = c.getString(severityColIndex);
+                     int severity = c.getInt(severityColIndex);
                      String trigger = c.getString(c.getColumnIndex(C_TRIGGER));
                      String emotion = c.getString(c.getColumnIndex(C_EMOTION));
                      String observation = c.getString(c.getColumnIndex(C_OBSERVATION));
@@ -257,7 +260,6 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
                      // CursorWrapper required when working with CursorLoader & SQLite DB
                      // CursorWrapper not required for raw queries
-                     // CursorWrapper cw;
                      int pos = 0;
                      for (int i = 0; i < mSpinSymptom.getCount(); i++){
                          CursorWrapper cw = (CursorWrapper) mSpinSymptom.getItemAtPosition(i);
@@ -267,11 +269,20 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                              break;
                          }
                      }
-
                      mSpinSymptom.setSelection(pos);
+
+                     pos = 0;
+                     for (int i=0; i < EMOTIONS.length; i++)
+                         //if (EMOTIONS[i].equals( mSpinEmotion.getItemAtPosition(i))){
+                         if (emotion.equals( mSpinEmotion.getItemAtPosition(i))){
+                             pos = i;
+                             break;
+                         }
+                     mSpinEmotion.setSelection(pos);
 
                      mEditDate.setText(date);
                      mEditTime.setText(time);
+                     mSpinSeverity.setSelection(severity);
                      mEditTrigger.setText(trigger);
                      mEditObservation.setText(observation);
                      mEditOutcome.setText(outcome);
@@ -357,7 +368,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                  // Alert Dialog for deleting one record
                  // showDeleteConfirmationDialog();
                  FragmentManager fm = getSupportFragmentManager();
-                 DeleteConfirmationDialogFragment df = new DeleteConfirmationDialogFragment();
+                 DialogFragmentDeleteConfirmation df = new DialogFragmentDeleteConfirmation();
                  df.show(fm, "fragment alert");
                  return true;
              // this is the <- button on the header
@@ -367,20 +378,26 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                      NavUtils.navigateUpFromSameTask(AddEditSymTraxActivity.this);
                      return true;
                  }
-                 // set up dialog to warn user about unsaved changes
-                 DialogInterface.OnClickListener discardButtonClickListener =
-                         new DialogInterface.OnClickListener() {
-                             @Override
-                             public void onClick(DialogInterface dialog, int i) {
-                                 //user click discard. Navigate up to parent activity
-                                 NavUtils.navigateUpFromSameTask(AddEditSymTraxActivity.this);
-                             }
-                         };
-                 // show user they have unsaved changes
-                 //TODO showUnsavedChangesDialog(discardButtonClickListener);
+                 mHomeChecked = true;
+                 showUnsavedChangesDialogFragment();
                  return true;
          }
          return super.onOptionsItemSelected(item);
+     }
+
+
+     // Override the activity's normal back button. If book has changed create a
+     // discard click listener that closed current activity.
+     @Override
+     public void onBackPressed() {
+         if (!mRecordChanged) {
+             super.onBackPressed();
+             return;
+         }
+         //otherwise if there are unsaved changes setup a dialog to warn the  user
+         //handles the user confirming that changes should be made
+         mHomeChecked = false;
+         showUnsavedChangesDialogFragment();
      }
 
 
@@ -481,9 +498,9 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
 
      // Load spinners with values from an array and set up Listener
-    private Spinner getSpinnerVal(int resourceId, final CharSequence[] cs, final int i){
+    private Spinner getSpinnerVal(int resourceId, final String[] cs, final int i){
         Spinner sp = findViewById(resourceId);
-        ArrayAdapter<CharSequence> csAdapter = new ArrayAdapter<>(this,
+        ArrayAdapter<String> csAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, cs);
         // Specify the layout to use when the list of choices appear
         csAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -493,7 +510,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
                 Log.v("RecordActivity", selection);
-                mSpinVal[i] = selection;  //tore the selection for future reference
+                mSpinVal[i] = selection;  //store the selection for future reference
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -529,6 +546,23 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                 timeFragment.show(getSupportFragmentManager(), "time picker");
             }
         });
+    }
+
+
+    private void showUnsavedChangesDialogFragment(){
+        FragmentManager fm = getSupportFragmentManager();
+        DialogFragment dfus = new DialogFragmentUnsavedChanges();
+        dfus.show(fm, "Unsaved Changes Dialog Fragment");
+    }
+
+    public void onDiscardClick(){
+        //user click discard. Navigate up to parent activity
+        if (mHomeChecked){  // at Home Checkmark
+            NavUtils.navigateUpFromSameTask(AddEditSymTraxActivity.this);
+        }
+        if (!mHomeChecked) { // at BackPressed
+            finish();
+        }
     }
 
 
