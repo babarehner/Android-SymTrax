@@ -65,7 +65,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
 
  public class AddEditSymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
-         DialogFragmentUnsavedChanges.DialogClickListener {
+         DialogFragmentUnsavedChanges.DialogClickListener, DialogFragDeleteConfirmation.DialogDeleteListener {
 
     private final String LOG_TAG = AddEditSymTraxActivity.class.getSimpleName();
 
@@ -163,19 +163,21 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
         // Feels like I have to put the following lines in to get correct initialization of
         // mSpinSymptomAdapter- threading problem.
+        /*
         Cursor c = getContentResolver().query(
                 SYMPTOM_URI,
                 null,
                 null,
                 null,
                 SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC");
+                */
         // c.close(); gives warning if I don't close it and crashes if I do ??
 
         // Having real problem with spinner, above line stops it in one
         // program but not the other
         mSpinSymptomAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_spinner_item,
-                c,
+                null,
                 new String[]{SymTraxContract.SymptomTableSchema.C_SYMPTOM },
                 new int[] {android.R.id.text1},
                 0);
@@ -367,9 +369,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
              case R.id.action_delete:
                  // Alert Dialog for deleting one record
                  // showDeleteConfirmationDialog();
-                 FragmentManager fm = getSupportFragmentManager();
-                 DialogFragmentDeleteConfirmation df = new DialogFragmentDeleteConfirmation();
-                 df.show(fm, "fragment alert");
+                 showDeleteConfirmationDialogFrag();
                  return true;
              // this is the <- button on the header
              case android.R.id.home:
@@ -472,31 +472,6 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
      }
 
 
-     private void showDeleteConfirmationDialog() {
-         // Create an AlertDialog.Builder, set message and click
-         // listeners for positive and negative buttons
-         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-         builder.setMessage(R.string.delete_dialog_msg);
-         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-             @Override
-             public void onClick(DialogInterface dialog, int which) {
-                 // User clicked delete so delete
-                 deleteRecord();
-             }
-         });
-         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-             @Override
-             public void onClick(DialogInterface dialog, int which) {
-                 // user clicked cancel, dismiss dialog, continue editing
-                 if (dialog != null) {dialog.dismiss();}
-             }
-         });
-         // Create and show dialog
-         AlertDialog alertD = builder.create();
-         alertD.show();
-     }
-
-
      // Load spinners with values from an array and set up Listener
     private Spinner getSpinnerVal(int resourceId, final String[] cs, final int i){
         Spinner sp = findViewById(resourceId);
@@ -534,7 +509,6 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         });
     }
 
-
     private void getTime(){
         mPickTime.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -550,9 +524,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
 
     private void showUnsavedChangesDialogFragment(){
-        FragmentManager fm = getSupportFragmentManager();
         DialogFragment dfus = new DialogFragmentUnsavedChanges();
-        dfus.show(fm, "Unsaved Changes Dialog Fragment");
+        dfus.show(getSupportFragmentManager(), "Unsaved Changes Dialog Fragment");
     }
 
     public void onDiscardClick(){
@@ -566,7 +539,18 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
     }
 
 
+     private void showDeleteConfirmationDialogFrag() {
+         DialogFragment df = new DialogFragDeleteConfirmation();
+         df.show(getSupportFragmentManager(), "Delete Symptom");
+     }
+
+     public void onDeleteClick(){
+        deleteRecord();
+     }
 
 
 
-}
+
+
+
+ }

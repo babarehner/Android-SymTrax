@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
@@ -16,7 +17,7 @@ public class DialogFragmentUnsavedChanges extends DialogFragment {
 
     public DialogFragmentUnsavedChanges() { } // constructor
 
-/*
+/*  Deprecated Activity- Use Context
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -52,6 +53,7 @@ public class DialogFragmentUnsavedChanges extends DialogFragment {
     }
 
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());

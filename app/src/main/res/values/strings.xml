@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SymTrax 0.8.0</string>
+    <string name="app_name">SymTrax 0.12.1</string>
     <string name="action_settings">Settings</string>
     <string name="action_symptoms">Symptoms</string>
 
@@ -44,6 +44,10 @@
     <string name="unsaved_changes_dialog_msg">Discard changes and quit editing</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep editing</string>
+    <string name="add_symptom">Add Symptom</string>
+    <string name="edit_symptom">Edit Symptom</string>
+    <string name="symtrax_table_update_failed">Symtrax table update failed</string>
+    <string name="symtrax_table_update_succeeded">SymTrax table update succeeded</string>
 
 
 </resources>

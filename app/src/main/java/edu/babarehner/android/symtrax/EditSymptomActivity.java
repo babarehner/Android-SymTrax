@@ -1,5 +1,7 @@
 package edu.babarehner.android.symtrax;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -10,6 +12,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +35,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 import static edu.babarehner.android.symtrax.data.SymTraxProvider.LOG_TAG;
 
 
-public class EditSymptomActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>  {
+public class EditSymptomActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+DialogFragmentUnsavedChanges.DialogClickListener, DialogFragDeleteConfirmation.DialogDeleteListener {
 
     private Uri mCurrentSymptomUri;
     static final int EXISTING_SYMPTOM_LOADER = 4;
@@ -39,6 +44,8 @@ public class EditSymptomActivity extends AppCompatActivity implements LoaderMana
     private String mSymptom;
     private EditText mEditSymptomText;
     private boolean mEditSymptomChanged;
+
+    private boolean mHomeChecked;
 
     // Touch listener to check if changes made to a record
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -58,9 +65,9 @@ public class EditSymptomActivity extends AppCompatActivity implements LoaderMana
         mCurrentSymptomUri = intent.getData();
 
         if (mCurrentSymptomUri == null) {
-            setTitle("Add an Equipment/Item Type");
+            setTitle(R.string.add_symptom);
         } else {
-            setTitle("Edit Equipment/Item Type");
+            setTitle(R.string.edit_symptom);
             getLoaderManager().initLoader(EXISTING_SYMPTOM_LOADER, null, EditSymptomActivity.this);
         }
 
@@ -120,7 +127,7 @@ public class EditSymptomActivity extends AppCompatActivity implements LoaderMana
                 return true;
             case R.id.action_delete_symptom:
                 // Alert Dialog for deleting one record;
-                showDeleteConfirmationDialog();
+                showDeleteConfirmationDialogFragment();
                 // deleteRecord();
                 return true;
             // this is the <- button on the toolbar
@@ -130,17 +137,10 @@ public class EditSymptomActivity extends AppCompatActivity implements LoaderMana
                     NavUtils.navigateUpFromSameTask(EditSymptomActivity.this);
                     return true;
                 }
-                // set up dialog to warn user about unsaved changes
-                DialogInterface.OnClickListener discardButtonClickListener =
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int i) {
-                                //user click discard. Navigate up to parent activity
-                                NavUtils.navigateUpFromSameTask(EditSymptomActivity.this);
-                            }
-                        };
+
                 // show user they have unsaved changes
-                showUnsavedChangesDialog(discardButtonClickListener);
+                mHomeChecked = true;
+                showUnsavedChangesDialogFragment();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -171,17 +171,8 @@ public class EditSymptomActivity extends AppCompatActivity implements LoaderMana
         }
         //otherwise if there are unsaved changes setup a dialog to warn the  user
         //handles the user confirming that changes should be made
-        DialogInterface.OnClickListener discardButtonClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        // user clicked "Discard" button, close the current activity
-                        finish();
-                    }
-                };
-
-        // show dialog that there are unsaved changes
-        showUnsavedChangesDialog(discardButtonClickListener);
+        mHomeChecked = false;
+        showUnsavedChangesDialogFragment();
     }
 
 
@@ -232,9 +223,10 @@ public class EditSymptomActivity extends AppCompatActivity implements LoaderMana
                     valuesTSymTrax, "CSymptom = ?" , new String [] {prevSymptom});
 
             if (rows == 0) {
-                Toast.makeText(this, "Machine_Table Update Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, rows + " rows " +
+                        getString(R.string.symtrax_table_update_failed), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Machine_Table Update Succeeded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.symtrax_table_update_succeeded), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -280,31 +272,6 @@ public class EditSymptomActivity extends AppCompatActivity implements LoaderMana
     }
 
 
-    private void showDeleteConfirmationDialog() {
-        // Create and AlertDialog.Builder, set message and click
-        // listeners for positive and negative buttons
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.delete_dialog_msg);
-        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // User clicked delete so delete
-                deleteRecord();
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // user clicked cancel, dismiss dialog, continue editing
-                if (dialog != null) {dialog.dismiss();}
-            }
-        });
-        // Create and show dialog
-        AlertDialog alertD = builder.create();
-        alertD.show();
-    }
-
-
     private void showNoCascadeDeleteDialog(){
         final AlertDialog.Builder albldr = new AlertDialog.Builder(this);
         StringBuilder sb = new StringBuilder();
@@ -334,22 +301,28 @@ public class EditSymptomActivity extends AppCompatActivity implements LoaderMana
     }
 
 
-    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener){
-        // Create AlertDialogue.Builder amd set message and click listeners
-        // for positive and negative buttons in dialogue.
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.unsaved_changes_dialog_msg);
-        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
-        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // user clicked the "keep eiditing" button. Dismiss dialog and keep editing
-                if (dialog !=null) { dialog.dismiss();}
-            }
-        });
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    private void showUnsavedChangesDialogFragment(){
+        DialogFragment dfus = new DialogFragmentUnsavedChanges();
+        dfus.show(getSupportFragmentManager(), "Unsaved Changes Dialog Fragment");
     }
 
+    public void onDiscardClick(){
+        //user click discard. Navigate up to parent activity
+        if (mHomeChecked){  // at Home Checkmark
+            NavUtils.navigateUpFromSameTask(EditSymptomActivity.this);
+        }
+        if (!mHomeChecked) { // at BackPressed
+            finish();
+        }
+    }
+
+    private void showDeleteConfirmationDialogFragment() {
+        DialogFragment df = new DialogFragDeleteConfirmation();
+        df.show(getSupportFragmentManager(), "Delete Symptom");
+    }
+
+    public void onDeleteClick(){
+        deleteRecord();
+    }
 }
