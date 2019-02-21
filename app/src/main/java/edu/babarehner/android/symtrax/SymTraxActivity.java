@@ -83,7 +83,7 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
                 projection,
                 null,
                 null,
-                C_DATE);
+                C_DATE +" DESC");
     }
 
     @Override

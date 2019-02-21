@@ -75,7 +75,9 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
     private Uri mCurrentRecordUri;
     private Uri mCurrentSymptomUri;
 
-    static final int SYM_TRAX_LOADER = 1;
+    public static final int SHARE_EMAIL = 0;
+    public static final int SHARE_TEXT = 1;
+
 
     static final int SYMPtOM_LOADER = 2;
 
@@ -208,6 +210,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         getDate();
         getTime();
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderID, Bundle bundle){
@@ -356,14 +359,14 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
              case R.id.action_share_email:
                  if (mShareActionProvider != null) {
                      // returns an intent
-                     //TODO mShareActionProvider.setShareIntent(shareData(SHARE_EMAIL));
+                     mShareActionProvider.setShareIntent(shareData(SHARE_EMAIL));
                  }
                  // Intent.createChooser(i, " Create Chooser");
                  Log.v(LOG_TAG, "in action share EMail after String Builder");
                  return true;
              case R.id.action_share_text:
                  if (mShareActionProvider != null){
-                     // TODO mShareActionProvider.setShareIntent(shareData(SHARE_TEXT));
+                     mShareActionProvider.setShareIntent(shareData(SHARE_TEXT));
                  }
                  return true;
              case R.id.action_delete:
@@ -549,7 +552,47 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
      }
 
 
+     // get thu current values shown on screen
+     public StringBuilder buildShareString(){
 
+         StringBuilder sb = new StringBuilder();
+
+         mEditDate = findViewById(R.id.et_date);
+         mEditTime =  findViewById(R.id.et_time);
+         // currently getting value already stored- not from spinner???
+         // mSpinSymptom = findViewById(R.id.sp_symptom);
+         mSpinSeverity = getSpinnerVal(R.id.sp_severity, SEVERITY, 0);
+         mEditTrigger = findViewById(R.id.et_trigger);
+         mSpinEmotion = getSpinnerVal(R.id.sp_Emotion, EMOTIONS, 1);
+         mEditObservation = findViewById(R.id.et_observation);
+         mEditOutcome = findViewById(R.id.et_outcome);
+
+         sb.append(mEditDate.getText().toString()).append("  ")
+                 .append(mEditTime.getText().toString()).append(" ").append("\n")
+                 .append("Symptom: ").append(mSpinSymptomVal).append("\n")
+                 .append("Severity: ").append(mSpinVal[0]).append("\n")
+                 .append("Trigger: ").append(mEditTrigger.getText().toString()).append("\n")
+                 .append("Emotion: ").append(mSpinVal[1]).append("\n")
+                 .append("Observation: ").append(mEditObservation.getText().toString()).append("\n")
+                 .append("Outcome: ").append(mEditOutcome.getText().toString()).append("\n");
+
+         Log.v(LOG_TAG, "String Builder " + sb);
+
+         return sb;
+
+     }
+
+     private Intent shareData(int shareType){
+         StringBuilder sb = new StringBuilder(buildShareString());
+         ShareDataFrag shareFragment = new ShareDataFrag();
+         Intent intent;
+         if (shareType == SHARE_TEXT) {
+             intent = shareFragment.shareText(mShareActionProvider, sb);
+         }else{
+             intent = shareFragment.shareEMail(mShareActionProvider, sb);
+         }
+         return intent;
+     }
 
 
 
