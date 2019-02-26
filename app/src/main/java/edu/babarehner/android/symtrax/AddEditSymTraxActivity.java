@@ -165,21 +165,17 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
         // Feels like I have to put the following lines in to get correct initialization of
         // mSpinSymptomAdapter- threading problem.
-        /*
         Cursor c = getContentResolver().query(
                 SYMPTOM_URI,
                 null,
                 null,
                 null,
                 SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC");
-                */
         // c.close(); gives warning if I don't close it and crashes if I do ??
 
-        // Having real problem with spinner, above line stops it in one
-        // program but not the other
         mSpinSymptomAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_spinner_item,
-                null,
+                c,
                 new String[]{SymTraxContract.SymptomTableSchema.C_SYMPTOM },
                 new int[] {android.R.id.text1},
                 0);
@@ -187,6 +183,9 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         mSpinSymptomAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinSymptom.setAdapter(mSpinSymptomAdapter);
         mSpinSymptom.setSelection(0, false);
+        // intialize mSpinSymptomVal to first item in spinner in case spinner not touched by user
+        CursorWrapper w = (CursorWrapper) mSpinSymptom.getItemAtPosition(0);
+        mSpinSymptomVal = String.valueOf(w.getString(1));
 
         mSpinSymptom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
