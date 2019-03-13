@@ -84,8 +84,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
     // load up the Severity Spinner
     public static final String [] SEVERITY = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     // load up the Emotion Spinner
-    public static final String[] EMOTIONS = {"None","Anger", "Disgust", "Envy", "Fear (Anxiety)",
-            "Happiness", "Jealousy", "Love", "Sadness", "Shame", "Guilt"};
+    public static final String[] EMOTIONS = {"None","Anger (grouchy)", "Disgust", "Envy", "Fear (Anxiety)",
+            "Happiness", "Jealousy", "Love", "Sadness", "Shame", "Guilt (sorry)"};
 
     private Button mPickDate, mPickTime;
     private EditText mEditDate, mEditTime;
@@ -476,12 +476,18 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
      // Load spinners with values from an array and set up Listener
     private Spinner getSpinnerVal(int resourceId, final String[] cs, final int i){
+        mSpinVal[i] = "";
         Spinner sp = findViewById(resourceId);
         ArrayAdapter<String> csAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, cs);
         // Specify the layout to use when the list of choices appear
         csAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(csAdapter); // apply the adapter to the spinner
+
+        //CursorWrapper w = (CursorWrapper) mSpinSymptom.getItemAtPosition(0);
+        //mSpinSymptomVal = String.valueOf(w.getString(1));
+        // initialize mSpinSymptomVal to first item in spinner in case spinner not touched by user
+        mSpinVal[i] =  (String) sp.getItemAtPosition(0);
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

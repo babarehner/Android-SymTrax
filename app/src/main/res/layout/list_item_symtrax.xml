@@ -11,30 +11,37 @@
     android:paddingTop="16dp"
     android:paddingLeft="@dimen/activity_small_margin">
 
-    <TextView
-        android:id="@+id/list_item_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="0dp"
-        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/list_item_time"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_margin"
-        android:layout_weight="2"
-        android:textStyle="bold"
-        tools:text="Breathing" />
 
     <TextView
         android:id="@+id/list_item_symptom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="0dp"
+        android:layout_weight="2"
+        tools:text="23"
+        android:paddingRight="@dimen/activity_margin"/>
+
+
+    <TextView
+        android:id="@+id/list_item_emotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:paddingLeft="@dimen/activity_margin"
-        android:paddingRight="@dimen/activity_margin"
+        android:paddingRight="8dp"
+        android:textStyle="bold"
+        android:layout_weight="2" />
+
+    <TextView
+        android:id="@+id/list_item_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
         android:textStyle="bold"
         android:gravity="end"
-        tools:text="23"/>
+        android:paddingRight="@dimen/activity_margin"/>
+
+
 
 </LinearLayout>

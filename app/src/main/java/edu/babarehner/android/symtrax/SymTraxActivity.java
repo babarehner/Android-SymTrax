@@ -21,6 +21,7 @@ import android.widget.ListView;
 import edu.babarehner.android.symtrax.data.SymTraxContract;
 
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_DATE;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_EMOTION;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TIME;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.SYM_TRAX_URI;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema._IDST;
@@ -75,7 +76,7 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
 
         String[] projection = {_IDST,
                 C_DATE,
-                C_TIME,
+                C_EMOTION,
                 SymTraxContract.SymTraxTableSchema.C_SYMPTOM};
 
         return new CursorLoader(this,

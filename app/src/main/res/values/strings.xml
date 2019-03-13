@@ -1,10 +1,18 @@
 <resources>
-    <string name="app_name">SymTrax 0.13.0</string>
+    <string name="app_name">SymTrax 0.14.0</string>
     <string name="action_settings">Settings</string>
     <string name="action_symptoms">Symptoms</string>
 
     <!-- Subtitle text for the empty view that prompts the user to add a machine/item [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Please get started adding some symptom tracking data by clicking on the button below.</string>
+
+
+    <string name="symptom_asc">Symptom &#708;</string>
+    <string name="symptom_desc">Symptom &#709;</string>
+    <string name="emotion_asc">Emotion &#708;</string>
+    <string name="emotion_desc">Emotion &#709;</string>
+    <string name="date_asc">Date &#708;</string>
+    <string name="date_desc">Date &#709;</string>
 
     <!-- activity_add_edit_symtrax strings -->
     <string name="date">Date</string>
