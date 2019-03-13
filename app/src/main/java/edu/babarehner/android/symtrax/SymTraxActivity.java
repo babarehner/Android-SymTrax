@@ -85,6 +85,7 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
+        String sortOrder = SymTraxSort.SORT_ORDER;
         String[] projection = {_IDST,
                 C_DATE,
                 C_EMOTION,
@@ -95,7 +96,7 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
                 projection,
                 null,
                 null,
-                C_DATE +" DESC");
+                sortOrder);
     }
 
     @Override
@@ -109,16 +110,15 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
     }
 
 
-    // Handle multiple button clicks
+    // Handle multiple buttons clicks
     @Override
     public void onClick(View v){
-        switch (v.getId()) {
-            case R.id.button1:
-                Toast.makeText(this, "Button Symptom clicked", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.button2:
-        }
+        // using global var for sortOrder, requires static method and variables
+        SymTraxSort.setSortOrder(v);
+        getLoaderManager().restartLoader(SYMTRAX_LOADER, null, this);
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
