@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import edu.babarehner.android.symtrax.data.SymTraxContract;
 
@@ -26,10 +28,11 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSc
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.SYM_TRAX_URI;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema._IDST;
 
-public class SymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class SymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
     private static final int SYMTRAX_LOADER = 0;
     SymTraxCursorAdapter mCursorAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,14 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
                 //        .setAction("Action", null).show();
             }
         });
+
+        Button buttonSymptom = findViewById(R.id.button1);
+        Button buttonEmotion = findViewById(R.id.button2);
+        Button buttonDate = findViewById(R.id.button3);
+        buttonSymptom.setOnClickListener(this);
+        buttonEmotion.setOnClickListener(this);
+        buttonDate.setOnClickListener(this);
+
 
         ListView symtraxListView = (ListView) findViewById(R.id.list_symtrax);
         View emptyView = findViewById(R.id.empty_subtitle_text);
@@ -97,6 +108,17 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
         mCursorAdapter.swapCursor(null);
     }
 
+
+    // Handle multiple button clicks
+    @Override
+    public void onClick(View v){
+        switch (v.getId()) {
+            case R.id.button1:
+                Toast.makeText(this, "Button Symptom clicked", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.button2:
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
