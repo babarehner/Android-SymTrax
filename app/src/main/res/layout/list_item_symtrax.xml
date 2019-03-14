@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_small_margin"
-
+        android:textStyle="bold"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/button1"
@@ -21,8 +21,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintWidth_percent="0.35"
         app:layout_constraintHorizontal_weight="4"
-
-
         />
 
 
@@ -31,14 +29,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_margin"
-        app:layout_constraintTop_toTopOf="@+id/button1"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@+id/button2"
         app:layout_constraintLeft_toRightOf="@+id/list_item_symptom"
         app:layout_constraintRight_toLeftOf="@+id/list_item_date"
         app:layout_constraintWidth_percent="0.33"
         app:layout_constraintHorizontal_weight="3.5"
         app:layout_constraintBaseline_toBaselineOf="@+id/list_item_symptom"
-
-
         />
 
     <TextView
@@ -46,7 +43,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_margin"
-        app:layout_constraintTop_toTopOf="@+id/button1"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@+id/button3"
         app:layout_constraintLeft_toRightOf="@id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
