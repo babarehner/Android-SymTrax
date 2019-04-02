@@ -16,6 +16,12 @@
         app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_share_entire_db"
+        android:title="@string/share_entire_db"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        app:showAsAction="never"/>
+
 
     <item
         android:id="@+id/action_save"

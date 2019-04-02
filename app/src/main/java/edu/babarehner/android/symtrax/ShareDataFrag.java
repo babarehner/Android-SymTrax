@@ -24,6 +24,7 @@ public class ShareDataFrag extends Fragment {
         return intent;
     }
 
+
     public Intent shareText(ShareActionProvider sap, StringBuilder sb){
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         String s = sb.toString();

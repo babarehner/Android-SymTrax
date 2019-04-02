@@ -58,6 +58,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSc
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_SYMPTOM;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TIME;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TRIGGER;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.SYM_TRAX_LIST_TYPE;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.SYM_TRAX_URI;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema._IDST;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema.SYMPTOM_URI;
@@ -358,14 +359,20 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
              case R.id.action_share_email:
                  if (mShareActionProvider != null) {
                      // returns an intent
-                     mShareActionProvider.setShareIntent(shareData(SHARE_EMAIL));
+                     mShareActionProvider.setShareIntent(shareData(SHARE_EMAIL, false));
                  }
                  // Intent.createChooser(i, " Create Chooser");
                  Log.v(LOG_TAG, "in action share EMail after String Builder");
                  return true;
              case R.id.action_share_text:
                  if (mShareActionProvider != null){
-                     mShareActionProvider.setShareIntent(shareData(SHARE_TEXT));
+                     mShareActionProvider.setShareIntent(shareData(SHARE_TEXT, false));
+                 }
+                 return true;
+             case R.id.action_share_entire_db:
+                 if (mShareActionProvider != null) {
+                     // return an intent
+                     mShareActionProvider.setShareIntent(shareData(SHARE_EMAIL, true));
                  }
                  return true;
              case R.id.action_delete:
@@ -584,11 +591,43 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          Log.v(LOG_TAG, "String Builder " + sb);
 
          return sb;
-
      }
 
-     private Intent shareData(int shareType){
-         StringBuilder sb = new StringBuilder(buildShareString());
+     public StringBuilder buildDBString(){
+        StringBuilder sb = new StringBuilder();
+        Cursor c = getContentResolver().query(SYM_TRAX_URI,null, null, null, null);
+        if (c!= null) {
+            while (c.moveToNext()) {
+                sb.append("Date: ");
+                sb.append(c.getString(c.getColumnIndexOrThrow(C_DATE)));
+                sb.append("   Time: ");
+                sb.append(c.getString(c.getColumnIndexOrThrow(C_TIME)));
+                sb.append("\nSymptom: ");
+                sb.append(c.getString(c.getColumnIndexOrThrow(C_SYMPTOM)));
+                sb.append("\nSeverity: ");
+                sb.append(c.getString(c.getColumnIndexOrThrow(C_SEVERITY)));
+                sb.append("\nTrigger: ");
+                sb.append(c.getString(c.getColumnIndexOrThrow(C_TRIGGER)));
+                sb.append("\nEmotion: ");
+                sb.append(c.getString(c.getColumnIndexOrThrow(C_EMOTION)));
+                sb.append("\nObservation: ");
+                sb.append(c.getString(c.getColumnIndexOrThrow(C_OBSERVATION)));
+                sb.append("\nOutcome: ");
+                sb.append(c.getString(c.getColumnIndexOrThrow(C_OUTCOME)));
+                sb.append("\n\n");
+            }
+        c.close();
+        }
+        return sb;
+     }
+
+     private Intent shareData(int shareType, boolean dbRecords){
+         StringBuilder sb;
+         if (dbRecords){
+             sb = buildDBString();
+         } else {
+             sb = buildShareString();
+         }
          ShareDataFrag shareFragment = new ShareDataFrag();
          Intent intent;
          if (shareType == SHARE_TEXT) {
@@ -598,6 +637,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          }
          return intent;
      }
+
+
 
 
 

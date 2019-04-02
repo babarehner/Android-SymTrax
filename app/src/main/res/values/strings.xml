@@ -56,6 +56,7 @@
     <string name="edit_symptom">Edit Symptom</string>
     <string name="symtrax_table_update_failed">Symtrax table update failed</string>
     <string name="symtrax_table_update_succeeded">SymTrax table update succeeded</string>
+    <string name="share_entire_db">Share all entries in db</string>
 
 
 </resources>
