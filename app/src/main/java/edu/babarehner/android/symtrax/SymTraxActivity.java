@@ -1,8 +1,8 @@
 package edu.babarehner.android.symtrax;
 
-import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -10,7 +10,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
@@ -18,20 +20,26 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import edu.babarehner.android.symtrax.data.SymTraxContract;
 
+import static edu.babarehner.android.symtrax.AddEditSymTraxActivity.SHARE_TEXT;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_DATE;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_EMOTION;
-import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TIME;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.SYM_TRAX_URI;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema._IDST;
 
-public class SymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+public class SymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+        View.OnClickListener {
 
     private static final int SYMTRAX_LOADER = 0;
     SymTraxCursorAdapter mCursorAdapter;
+
+    private ShareActionProvider mShareActionProvider;
+    public static final int SHARE_EMAIL = 0;
+    public static final int SHARE_TEXT = 1;
+
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 1;
 
 
     @Override
@@ -61,7 +69,7 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
         buttonDate.setOnClickListener(this);
 
 
-        ListView symtraxListView = (ListView) findViewById(R.id.list_symtrax);
+        ListView symtraxListView = findViewById(R.id.list_symtrax);
         View emptyView = findViewById(R.id.empty_subtitle_text);
         symtraxListView.setEmptyView(emptyView);
 
@@ -104,6 +112,7 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
         mCursorAdapter.swapCursor(data);
     }
 
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
@@ -120,26 +129,45 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu m) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_symtrax, menu);
+        getMenuInflater().inflate(R.menu.menu_symtrax, m);
+
+        // relate mShareActionProvider to share e-mail menu item
+        // initialize mShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider
+                (m.findItem(R.id.action_share_entire_db));
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.action_symptom_activity) {
-            Intent intent = new Intent(SymTraxActivity.this, SymptomActivity.class);
-            startActivity(intent);
+        Context cntxt = this;
+        ShareDataHelper bckupDB = new ShareDataHelper();
+        switch (item.getItemId()) {
+            case (R.id.action_settings):
+                return true;
+            case (R.id.action_symptom_activity):
+                Intent intent = new Intent(SymTraxActivity.this, SymptomActivity.class);
+                startActivity(intent);
+                return true;
+            case (R.id.action_share_entire_db):
+                StringBuilder sb = bckupDB.buildDBString(cntxt);
+                if (mShareActionProvider != null) {
+                    // returns an intent
+                    mShareActionProvider.setShareIntent(bckupDB.shareEMail(mShareActionProvider, sb));
+                }
+                return true;
+            case (R.id.action_backup_db_to_storage):
+                bckupDB.backupDB( cntxt );
+                return true;
+            case (R.id.action_save_db_to_csv):
+                bckupDB.writeCSVfile(cntxt);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

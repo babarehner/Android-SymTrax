@@ -19,20 +19,19 @@ package edu.babarehner.android.symtrax;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -58,7 +57,6 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSc
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_SYMPTOM;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TIME;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_TRIGGER;
-import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.SYM_TRAX_LIST_TYPE;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.SYM_TRAX_URI;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema._IDST;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema.SYMPTOM_URI;
@@ -369,12 +367,6 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                      mShareActionProvider.setShareIntent(shareData(SHARE_TEXT, false));
                  }
                  return true;
-             case R.id.action_share_entire_db:
-                 if (mShareActionProvider != null) {
-                     // return an intent
-                     mShareActionProvider.setShareIntent(shareData(SHARE_EMAIL, true));
-                 }
-                 return true;
              case R.id.action_delete:
                  // Alert Dialog for deleting one record
                  // showDeleteConfirmationDialog();
@@ -564,6 +556,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
      }
 
 
+
      // get thu current values shown on screen
      public StringBuilder buildShareString(){
 
@@ -593,42 +586,13 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          return sb;
      }
 
-     public StringBuilder buildDBString(){
-        StringBuilder sb = new StringBuilder();
-        Cursor c = getContentResolver().query(SYM_TRAX_URI,null, null, null, null);
-        if (c!= null) {
-            while (c.moveToNext()) {
-                sb.append("Date: ");
-                sb.append(c.getString(c.getColumnIndexOrThrow(C_DATE)));
-                sb.append("   Time: ");
-                sb.append(c.getString(c.getColumnIndexOrThrow(C_TIME)));
-                sb.append("\nSymptom: ");
-                sb.append(c.getString(c.getColumnIndexOrThrow(C_SYMPTOM)));
-                sb.append("\nSeverity: ");
-                sb.append(c.getString(c.getColumnIndexOrThrow(C_SEVERITY)));
-                sb.append("\nTrigger: ");
-                sb.append(c.getString(c.getColumnIndexOrThrow(C_TRIGGER)));
-                sb.append("\nEmotion: ");
-                sb.append(c.getString(c.getColumnIndexOrThrow(C_EMOTION)));
-                sb.append("\nObservation: ");
-                sb.append(c.getString(c.getColumnIndexOrThrow(C_OBSERVATION)));
-                sb.append("\nOutcome: ");
-                sb.append(c.getString(c.getColumnIndexOrThrow(C_OUTCOME)));
-                sb.append("\n\n");
-            }
-        c.close();
-        }
-        return sb;
-     }
+
+
 
      private Intent shareData(int shareType, boolean dbRecords){
-         StringBuilder sb;
-         if (dbRecords){
-             sb = buildDBString();
-         } else {
-             sb = buildShareString();
-         }
-         ShareDataFrag shareFragment = new ShareDataFrag();
+
+         StringBuilder sb = buildShareString();
+         ShareDataHelper shareFragment = new ShareDataHelper();
          Intent intent;
          if (shareType == SHARE_TEXT) {
              intent = shareFragment.shareText(mShareActionProvider, sb);
@@ -640,6 +604,10 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
 
 
+}
 
 
- }
+
+
+
+

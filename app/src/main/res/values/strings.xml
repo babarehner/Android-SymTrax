@@ -56,7 +56,9 @@
     <string name="edit_symptom">Edit Symptom</string>
     <string name="symtrax_table_update_failed">Symtrax table update failed</string>
     <string name="symtrax_table_update_succeeded">SymTrax table update succeeded</string>
-    <string name="share_entire_db">Share all entries in db</string>
+    <string name="share_entire_db">Share DB in E-Mail</string>
+    <string name="action_save_db_to_csv">Backup DB to phone as csv file</string>
+    <string name="action_backup_db_to_storage">Backup  DB to phone</string>
 
 
 </resources>
