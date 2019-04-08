@@ -35,6 +35,9 @@ public class ShareDataHelper {
 
     private final String LOG_TAG = ShareDataHelper.class.getSimpleName();
 
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 1;
+
+
 
     public Intent shareEMail(ShareActionProvider sap, StringBuilder sb){
         Intent intent = new Intent(Intent.ACTION_SENDTO);
@@ -193,18 +196,7 @@ public class ShareDataHelper {
         }
         return false;
     }
-
-
-    /* Check whether this app has write external storage permissions or not
-    public void checkWritePermission(Activity activity){
-        int writeExternalStoragePermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        // If do not grant write external storage permission.
-        if(writeExternalStoragePermission!= PackageManager.PERMISSION_GRANTED) {
-            // Request user to grant write external storage permission.
-            .requestPermission( context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-            ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-    }
-    */
+    
 
 }
 

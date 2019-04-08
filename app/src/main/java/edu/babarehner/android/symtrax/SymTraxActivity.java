@@ -1,15 +1,22 @@
 package edu.babarehner.android.symtrax;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -20,6 +27,9 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.io.File;
 
 import edu.babarehner.android.symtrax.data.SymTraxContract;
 
@@ -163,13 +173,48 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
                 }
                 return true;
             case (R.id.action_backup_db_to_storage):
+                checkWritePermission();
                 bckupDB.backupDB( cntxt );
                 return true;
             case (R.id.action_save_db_to_csv):
+                checkWritePermission();
                 bckupDB.writeCSVfile(cntxt);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void checkWritePermission(){
+
+        // Get public external storage folder ( /storage/emulated/0 ).
+        // File externalDir = Environment.getExternalStorageDirectory();
+
+        // Get /storage/emulated/0/Music folder.
+        // File docPublicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+
+        // Check whether this app has write external storage permission or not.
+        int writeExternalStoragePermission = ContextCompat.checkSelfPermission(SymTraxActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        // If do not grant write external storage permission.
+        if(writeExternalStoragePermission!= PackageManager.PERMISSION_GRANTED)
+        {
+            // Request user to grant write external storage permission.
+            ActivityCompat.requestPermissions(SymTraxActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION) {
+            int grantResultsLength = grantResults.length;
+            if (grantResultsLength > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(), "Write permission granted for External Storage. Please return to Backup menu item.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Write external storage permission not granted. Unable to back up item.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 }
