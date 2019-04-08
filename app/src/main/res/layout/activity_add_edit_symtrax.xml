@@ -136,6 +136,27 @@
                 android:visibility="visible" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/container_Emotion2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                android:id="@+id/tv_emotion2"
+                style="@style/CategoryStyle"
+                android:text="@string/emotion2" />
+
+            <Spinner
+                android:id="@+id/sp_Emotion2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:spinnerMode="dropdown"
+                android:visibility="visible" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/container_observation"

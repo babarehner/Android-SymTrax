@@ -27,11 +27,11 @@ import edu.babarehner.android.symtrax.data.SymTraxContract;
  public class SymTraxDBHelper extends SQLiteOpenHelper {
 
      // To allow for changes in DB versioning and keeping user data
-     private static final int DB_VERSION = 1;
+     private static final int DB_VERSION = 2;
 
      private static final String DB_NAME = "sym_trax.db";
 
-     public SymTraxDBHelper(Context context) {
+     SymTraxDBHelper(Context context) {
          super(context, DB_NAME, null, DB_VERSION);
      }
 
@@ -48,6 +48,7 @@ import edu.babarehner.android.symtrax.data.SymTraxContract;
                  SymTraxContract.SymTraxTableSchema.C_SEVERITY + " INTEGER, " +
                  SymTraxContract.SymTraxTableSchema.C_TRIGGER + " TEXT, " +
                  SymTraxContract.SymTraxTableSchema.C_EMOTION + " TEXT, " +
+                 SymTraxContract.SymTraxTableSchema.C_EMOTION2 + " TEXT, " +
                  SymTraxContract.SymTraxTableSchema.C_OBSERVATION + " TEXT, " +
                  SymTraxContract.SymTraxTableSchema.C_OUTCOME + " TEXT );";
 

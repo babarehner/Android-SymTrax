@@ -51,6 +51,7 @@ import edu.babarehner.android.symtrax.data.SymTraxContract;
 
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_DATE;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_EMOTION;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_EMOTION2;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_OBSERVATION;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_OUTCOME;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_SEVERITY;
@@ -92,13 +93,14 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
     private Spinner mSpinSeverity;
     private EditText mEditTrigger;
     private Spinner mSpinEmotion;
+    private Spinner mSpinEmotion2;
     private EditText mEditObservation;
     private EditText mEditOutcome;
 
     // see if I can change this to private??
     public SimpleCursorAdapter mSpinSymptomAdapter;
     private String mSpinSymptomVal; // holds the value of the spinner symptom
-    private String[] mSpinVal = {"",""}; // initialization for Serverity, Emotion Spinner Values
+    private String[] mSpinVal = {"","", ""}; // initialization for Serverity, & both Emotion Spinner Values
 
     private boolean mRecordChanged = false;
     private boolean mHomeChecked;
@@ -146,6 +148,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         mSpinSeverity = findViewById(R.id.sp_severity);
         mEditTrigger = findViewById(R.id.et_trigger);
         mSpinEmotion = findViewById(R.id.sp_Emotion);
+        mSpinEmotion2 = findViewById(R.id.sp_Emotion2);
         mEditObservation = findViewById(R.id.et_observation);
         mEditOutcome = findViewById(R.id.et_outcome);
 
@@ -156,6 +159,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         mSpinSeverity.setOnTouchListener(mTouchListener);
         mEditTrigger.setOnTouchListener(mTouchListener);
         mSpinEmotion.setOnTouchListener(mTouchListener);
+        mSpinEmotion2.setOnTouchListener(mTouchListener);
         mEditObservation.setOnTouchListener(mTouchListener);
         mEditOutcome.setOnTouchListener(mTouchListener);
 
@@ -203,6 +207,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         // load the rest of the spinners
         mSpinSeverity = getSpinnerVal(R.id.sp_severity, SEVERITY, 0);
         mSpinEmotion = getSpinnerVal(R.id.sp_Emotion, EMOTIONS, 1);
+        mSpinEmotion2 = getSpinnerVal(R.id.sp_Emotion2, EMOTIONS, 2);
 
         //handle the time and date button clicks
         getDate();
@@ -223,6 +228,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                         C_SEVERITY,
                         C_TRIGGER,
                         C_EMOTION,
+                        C_EMOTION2,
                         C_OBSERVATION,
                         C_OUTCOME};
                 // new loader for new thread
@@ -258,6 +264,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                      int severity = c.getInt(severityColIndex);
                      String trigger = c.getString(c.getColumnIndex(C_TRIGGER));
                      String emotion = c.getString(c.getColumnIndex(C_EMOTION));
+                     String emotion2 = c.getString(c.getColumnIndex(C_EMOTION2));
                      String observation = c.getString(c.getColumnIndex(C_OBSERVATION));
                      String outcome = c.getString(c.getColumnIndex(C_OUTCOME));
 
@@ -282,6 +289,15 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                              break;
                          }
                      mSpinEmotion.setSelection(pos);
+
+                     pos = 0;
+                     for (int i=0; i < EMOTIONS.length; i++)
+                         //if (EMOTIONS[i].equals( mSpinEmotion.getItemAtPosition(i))){
+                         if (emotion2.equals( mSpinEmotion2.getItemAtPosition(i))){
+                             pos = i;
+                             break;
+                         }
+                     mSpinEmotion2.setSelection(pos);
 
                      mEditDate.setText(date);
                      mEditTime.setText(time);
@@ -411,6 +427,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          String severity = mSpinVal[0];
          String trigger = mEditTrigger.getText().toString().trim();
          String emotion = mSpinVal[1];
+         String emotion2 = mSpinVal[2];
          String observation = mEditObservation.getText().toString().trim();
          String outcome = mEditOutcome.getText().toString().trim();
 
@@ -423,6 +440,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          values.put(C_SEVERITY, severity);
          values.put(C_TRIGGER, trigger);
          values.put(C_EMOTION, emotion);
+         values.put(C_EMOTION2, emotion2);
          values.put(C_OBSERVATION, observation);
          values.put(C_OUTCOME, outcome);
 
@@ -578,6 +596,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                  .append("Severity: ").append(mSpinVal[0]).append("\n")
                  .append("Trigger: ").append(mEditTrigger.getText().toString()).append("\n")
                  .append("Emotion: ").append(mSpinVal[1]).append("\n")
+                 .append("Emotion2: ").append(mSpinVal[1]).append("\n")
                  .append("Observation: ").append(mEditObservation.getText().toString()).append("\n")
                  .append("Outcome: ").append(mEditOutcome.getText().toString()).append("\n");
 

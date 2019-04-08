@@ -14,30 +14,30 @@ public class SymTraxContract {
 
 
     // use package name for convenience for the Content Authority
-    public static final String SYM_TRAX_AUTHORITY = "edu.babarehner.android.symtrax";
+    static final String SYM_TRAX_AUTHORITY = "edu.babarehner.android.symtrax";
 
     // Use SYM_TRAX_AUTHORITY to create the base of all Uri's which apps use
     // to contact the content provider
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" +
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" +
             SYM_TRAX_AUTHORITY);
-    public static final String PATH_SYM_TRAX_TABLE_NAME = "TSymTrax";
-    public static final String PATH_SYMPTOMS_TABLE_NAME ="TSymptoms";
+    static final String PATH_SYM_TRAX_TABLE_NAME = "TSymTrax";
+    static final String PATH_SYMPTOMS_TABLE_NAME ="TSymptoms";
 
 
     // Inner class that defines SymTrax table and columns
     public static final class SymTraxTableSchema implements BaseColumns {
 
         // MIME type of the (@link #CONTENT_URI for a stuff database table
-        public static final String SYM_TRAX_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+        static final String SYM_TRAX_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
                 + "/" + SYM_TRAX_AUTHORITY + "/" + PATH_SYM_TRAX_TABLE_NAME;
         // MIME type of the (@link #CONTENT_URI for a single record
-        public static final String SYM_TRAX_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+        static final String SYM_TRAX_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
                 + "/" + SYM_TRAX_AUTHORITY + "/" + PATH_SYM_TRAX_TABLE_NAME;
         // Content URI to access the table data in the provider
         public static final Uri SYM_TRAX_URI = Uri.withAppendedPath(BASE_CONTENT_URI,
                 PATH_SYM_TRAX_TABLE_NAME);
 
-        public static final String SYM_TRAX_TABLE_NAME = "TSymTrax";
+        static final String SYM_TRAX_TABLE_NAME = "TSymTrax";
 
         // the globals and the columns
         public static final String _IDST = BaseColumns._ID;
@@ -47,6 +47,7 @@ public class SymTraxContract {
         public static final String C_SEVERITY = "CSeverity";  //should I make this an integer
         public static final String C_TRIGGER = "CTrigger";
         public static final String C_EMOTION = "CEmotion";
+        public static final String C_EMOTION2 = "CEmotion2";
         public static final String C_OBSERVATION = "CObservation"; // or thoughts
         public static final String C_OUTCOME= "COutcome";
 
@@ -56,16 +57,16 @@ public class SymTraxContract {
     public static final class SymptomTableSchema implements BaseColumns {
 
         // MIME type of the (@link #CONTENT_URI for a stuff database table
-        public static final String SYMPTOM_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+        static final String SYMPTOM_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
                 + "/" + SYM_TRAX_AUTHORITY + "/" + PATH_SYMPTOMS_TABLE_NAME;
         // MIME type of the (@link #CONTENT_URI for a single record
-        public static final String SYMPTOM_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+        static final String SYMPTOM_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
                 + "/" + SYM_TRAX_AUTHORITY + "/" + PATH_SYMPTOMS_TABLE_NAME;
         // Content URI to access the table data in the provider
         public static final Uri SYMPTOM_URI = Uri.withAppendedPath(BASE_CONTENT_URI,
                 PATH_SYMPTOMS_TABLE_NAME);
 
-        public static final String SYMPTOMS_TABLE_NAME = "TSymptoms";
+        static final String SYMPTOMS_TABLE_NAME = "TSymptoms";
 
         // the globals and the columns
         public static final String _IDS = BaseColumns._ID;
