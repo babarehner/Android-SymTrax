@@ -34,6 +34,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +47,11 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import edu.babarehner.android.symtrax.data.SymTraxContract;
 
@@ -115,6 +121,9 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
      };
 
      private ShareActionProvider mShareActionProvider;
+
+     private long mMS = 0; //Linux Time in milliseconds
+     private String mDateDB;
 
 
     @Override
@@ -258,7 +267,10 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                      int symptomColIndex = c.getColumnIndex(C_SYMPTOM);
                      int severityColIndex = c.getColumnIndex(C_SEVERITY);
 
-                     String date = c.getString(dateColIndex);
+                    // use the index to pull the data out
+                     mMS = c.getLong(dateColIndex);
+                     mDateDB = DateUtility.formatDate(mMS); // hold on to mMS in case other fields are edited!!!
+                     // String date = c.getString(dateColIndex);
                      String time = c.getString(timeColIndex);
                      String symptom = c.getString(symptomColIndex);
                      int severity = c.getInt(severityColIndex);
@@ -299,7 +311,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                          }
                      mSpinEmotion2.setSelection(pos);
 
-                     mEditDate.setText(date);
+
+                     mEditDate.setText(mDateDB);
                      mEditTime.setText(time);
                      mSpinSeverity.setSelection(severity);
                      mEditTrigger.setText(trigger);
@@ -420,8 +433,21 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
 
      private void saveRecord() {
 
+         // read from input fields. Add date & time to get correct sort order for date + time
+         String strDateTime = mEditDate.getText().toString() + " " + mEditTime.getText().toString();
+
+         // convert string date to Linux date
+         SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy hh:mm", Locale.US);
+         // long ms = 0
+         try {
+             Date d = f.parse(strDateTime);
+             mMS = d.getTime(); // date-time in ms since 1/1/1970
+         } catch (ParseException e) {
+             e.printStackTrace();
+         }
+
          // read from EditText and Spinner input fields
-         String date = mEditDate.getText().toString();
+         // String date = mEditDate.getText().toString();
          String time = mEditTime.getText().toString();
          String symptom  = mSpinSymptomVal;
          String severity = mSpinVal[0];
@@ -431,10 +457,14 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          String observation = mEditObservation.getText().toString().trim();
          String outcome = mEditOutcome.getText().toString().trim();
 
-
+         // if the date field is left blank do nothing
+         if (mCurrentRecordUri == null & TextUtils.isEmpty(strDateTime)) {
+             Toast.makeText(this, getString(R.string.missing_date), Toast.LENGTH_SHORT).show();
+             return;
+         }
 
          ContentValues values = new ContentValues();
-         values.put(C_DATE, date);
+         values.put(C_DATE, mMS);
          values.put(C_TIME, time);
          values.put(SymTraxContract.SymTraxTableSchema.C_SYMPTOM, symptom);
          values.put(C_SEVERITY, severity);
@@ -590,13 +620,13 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          mEditObservation = findViewById(R.id.et_observation);
          mEditOutcome = findViewById(R.id.et_outcome);
 
-         sb.append(mEditDate.getText().toString()).append("  ")
-                 .append(mEditTime.getText().toString()).append(" ").append("\n")
+         sb.append(mDateDB).append("   ")
+                 .append(mEditTime.getText()).append("\n")
                  .append("Symptom: ").append(mSpinSymptomVal).append("\n")
                  .append("Severity: ").append(mSpinVal[0]).append("\n")
                  .append("Trigger: ").append(mEditTrigger.getText().toString()).append("\n")
                  .append("Emotion: ").append(mSpinVal[1]).append("\n")
-                 .append("Emotion2: ").append(mSpinVal[1]).append("\n")
+                 .append("Emotion 2: ").append(mSpinVal[1]).append("\n")
                  .append("Observation: ").append(mEditObservation.getText().toString()).append("\n")
                  .append("Outcome: ").append(mEditOutcome.getText().toString()).append("\n");
 

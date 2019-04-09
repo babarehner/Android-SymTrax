@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import edu.babarehner.android.symtrax.data.SymTraxContract;
 
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_DATE;
@@ -42,7 +46,11 @@ public class SymTraxCursorAdapter extends CursorAdapter {
         int symptomColIndex = c.getColumnIndex(SymTraxContract.SymTraxTableSchema.C_SYMPTOM);
         int emotionColIndex = c.getColumnIndex(C_EMOTION);
 
-        String date = c.getString(dateColIndex);
+        // get long datetime for db and convert it to string
+        long d = c.getLong(dateColIndex);
+        Date dateTime = new Date(d);
+        SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        String date = f.format(dateTime);
         //String time = c.getString(timeColIndex);
         String symptom = c.getString(symptomColIndex);
         String emotion = c.getString(emotionColIndex);

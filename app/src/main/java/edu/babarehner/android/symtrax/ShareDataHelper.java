@@ -19,9 +19,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_DATE;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_EMOTION;
+import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_EMOTION2;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_OBSERVATION;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_OUTCOME;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_SEVERITY;
@@ -73,8 +77,14 @@ public class ShareDataHelper {
         Cursor c = context.getContentResolver().query(SYM_TRAX_URI,null, null, null, null);
         if (c!= null) {
             while (c.moveToNext()) {
+                // convert ms long time to text
+                long d = c.getLong(c.getColumnIndexOrThrow(C_DATE));
+                Date dateTime = new Date(d);
+                SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                String date = f.format(dateTime);
+
                 sb.append("Date: ")
-                .append(c.getString(c.getColumnIndexOrThrow(C_DATE)))
+                .append(date)
                 .append("   Time: ")
                 .append(c.getString(c.getColumnIndexOrThrow(C_TIME)))
                 .append("\nSymptom: ")
@@ -85,6 +95,8 @@ public class ShareDataHelper {
                 .append(c.getString(c.getColumnIndexOrThrow(C_TRIGGER)))
                 .append("\nEmotion: ")
                 .append(c.getString(c.getColumnIndexOrThrow(C_EMOTION)))
+                .append("\nEmotion 2: ")
+                .append(c.getString(c.getColumnIndexOrThrow(C_EMOTION2)))
                 .append("\nObservation: ")
                 .append(c.getString(c.getColumnIndexOrThrow(C_OBSERVATION)))
                 .append("\nOutcome: ")
@@ -105,7 +117,7 @@ public class ShareDataHelper {
             // add the headers
             csv.append(C_DATE).append(", ").append(C_TIME).append(", ").append(C_SYMPTOM)
                     .append(", ").append(C_SEVERITY).append(", ").append(C_TRIGGER).append(", ")
-                    .append(C_EMOTION).append(", ").append(C_OBSERVATION).append(", ")
+                    .append(C_EMOTION).append(", ").append(C_EMOTION2).append(", ").append(C_OBSERVATION).append(", ")
                     .append(C_OUTCOME).append("\n");
             while (c.moveToNext()) {
                 csv.append(c.getString(c.getColumnIndexOrThrow(C_DATE))).append(", ")
@@ -114,6 +126,7 @@ public class ShareDataHelper {
                         .append(c.getString(c.getColumnIndexOrThrow(C_SEVERITY))).append(", ")
                         .append(c.getString(c.getColumnIndexOrThrow(C_TRIGGER))).append(", ")
                         .append(c.getString(c.getColumnIndexOrThrow(C_EMOTION))).append(", ")
+                        .append(c.getString(c.getColumnIndexOrThrow(C_EMOTION2))).append(", ")
                         .append(c.getString(c.getColumnIndexOrThrow(C_OBSERVATION))).append(", ")
                         .append(c.getString(c.getColumnIndexOrThrow(C_OUTCOME))).append(", ")
                         .append("\n");

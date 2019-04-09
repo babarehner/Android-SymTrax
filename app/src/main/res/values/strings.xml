@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SymTrax 0.16.0</string>
+    <string name="app_name">SymTrax 0.17.0</string>
     <string name="action_settings">Settings</string>
     <string name="action_symptoms">Symptoms</string>
 
@@ -60,6 +60,7 @@
     <string name="share_entire_db">Share DB in E-Mail</string>
     <string name="action_save_db_to_csv">Backup DB to phone as csv file</string>
     <string name="action_backup_db_to_storage">Backup  DB to phone</string>
+    <string name="missing_date">Please enter a date to add a record</string>
 
 
 </resources>
