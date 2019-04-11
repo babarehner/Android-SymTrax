@@ -457,7 +457,7 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          String observation = mEditObservation.getText().toString().trim();
          String outcome = mEditOutcome.getText().toString().trim();
 
-         // if the date field is left blank or set to 0 ms on enetering a new record do nothing
+         // if the date field is left blank or set to 0 ms on enetering a new record got do nothing
          if (mCurrentRecordUri == null & TextUtils.isEmpty(strDateTime) || (mMS == 0)) {
              Toast.makeText(this, getString(R.string.missing_date), Toast.LENGTH_LONG).show();
              return;
