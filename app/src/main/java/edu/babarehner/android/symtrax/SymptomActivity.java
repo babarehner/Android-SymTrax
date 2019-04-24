@@ -73,7 +73,6 @@ public class SymptomActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Loader<Cursor> loader = null;
 
         String symptomSortOrder = SymTraxContract.SymptomTableSchema.C_SYMPTOM + " ASC";
         mCurrentSymptomUri = SYMPTOM_URI;
