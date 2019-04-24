@@ -61,6 +61,7 @@
     <string name="action_save_db_to_csv">Backup DB to phone as csv file</string>
     <string name="action_backup_db_to_storage">Backup  DB to phone</string>
     <string name="missing_date">Please enter a date to add a record</string>
+    <string name="action_set_filters">Set Filters</string>
 
 
 </resources>

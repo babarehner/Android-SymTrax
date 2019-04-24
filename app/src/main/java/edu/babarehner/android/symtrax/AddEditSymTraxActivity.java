@@ -55,6 +55,7 @@ import java.util.Locale;
 
 import edu.babarehner.android.symtrax.data.SymTraxContract;
 
+import static edu.babarehner.android.symtrax.Konstants.EMOTIONS;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_DATE;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_EMOTION;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema.C_EMOTION2;
@@ -68,6 +69,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSc
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymTraxTableSchema._IDST;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema.SYMPTOM_URI;
 import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSchema._IDS;
+
+// import static edu.babarehner.android.Konstants.EMOTIONS;
 
 
  public class AddEditSymTraxActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
@@ -90,8 +93,6 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
     // load up the Severity Spinner
     public static final String [] SEVERITY = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     // load up the Emotion Spinner
-    public static final String[] EMOTIONS = {"None","Anger (grouchy)", "Disgust", "Envy", "Fear (Anxiety)",
-            "Happiness", "Jealousy", "Love", "Sadness", "Shame", "Guilt (sorry)"};
 
     private Button mPickDate, mPickTime;
     private EditText mEditDate, mEditTime;
