@@ -3,26 +3,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
-    android:gravity="center_horizontal"
-    android:padding="16dp">
+    android:gravity="left"
+    android:padding="4dp">
 
-    <CheckBox android:text=""
+    <CheckBox
         android:id="@+id/list_item_filter_symptom_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="false"
-        ></CheckBox>
+        android:layout_gravity="center_vertical"
+        />
 
     <TextView
         android:id="@+id/list_item_symptoms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="8dp"
+        android:paddingLeft="4dp"
         android:paddingRight="2dp"
         android:textStyle="bold"
+        android:layout_gravity="center_vertical"
         tools:text="Feeling faint" />
 
 </LinearLayout>

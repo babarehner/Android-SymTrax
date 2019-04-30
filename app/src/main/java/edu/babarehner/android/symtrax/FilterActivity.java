@@ -10,8 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -37,9 +40,9 @@ public class FilterActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
-        setTitle("Filters");
+        setTitle("Set Filters");
 
-        // Damn better remember his complicated conversion
+        // Damn better remember this complicated conversion
         ArrayList<String> arrayEmotions = new ArrayList(Arrays.asList(Konstants.EMOTIONS));
         FilterEmotionArrayAdapter adapter = new FilterEmotionArrayAdapter(this, arrayEmotions);
 
@@ -82,4 +85,42 @@ public class FilterActivity extends AppCompatActivity implements LoaderManager.L
         mCursorAdapter.swapCursor(null);
 
     }
+
+    // Options menu automatically called from onCreate I believe
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_filter_activity, menu);
+        return true;
+    }
+
+    // Select from the options menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int menuItem = item.getItemId();
+        switch (menuItem) {
+            case R.id.action_save_filters:
+                //saveRecord();
+                finish();       // exit activity
+                return true;
+            case R.id.action_delete_filters:
+                // Alert Dialog for deleting one record;
+                //showDeleteConfirmationDialogFragment();
+                // deleteRecord();
+                return true;
+            // this is the <- button on the toolbar
+            case android.R.id.home:
+                // record has not changed
+                //if (!mEditSymptomChanged) {
+                // NavUtils.navigateUpFromSameTask(EditSymptomActivity.this);
+                //    return true;
+                //}
+
+                // show user they have unsaved changes
+                //mHomeChecked = true;
+                //showUnsavedChangesDialogFragment();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

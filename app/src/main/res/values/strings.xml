@@ -62,6 +62,8 @@
     <string name="action_backup_db_to_storage">Backup  DB to phone</string>
     <string name="missing_date">Please enter a date to add a record</string>
     <string name="action_set_filters">Set Filters</string>
+    <string name="action_save_filter">Save filter checkbox choices</string>
+    <string name="action_delete_filter">Delete all filter checkbox choices</string>
 
 
 </resources>

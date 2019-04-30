@@ -6,22 +6,24 @@
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
-    android:gravity="center_horizontal"
-    android:padding="16dp">
+    android:gravity="left"
+    android:padding="4dp">
 
-    <CheckBox android:text=""
+    <CheckBox
         android:id="@+id/list_item_filter_emotion_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="false"
-        ></CheckBox>
+        android:layout_gravity="center_vertical"
+        />
 
     <TextView
         android:id="@+id/list_item_filter_emotions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="8dp"
+        android:paddingLeft="4dp"
         android:textStyle="bold"
+        android:layout_gravity="center_vertical"
         tools:text="Fear" />
 
 </LinearLayout>
