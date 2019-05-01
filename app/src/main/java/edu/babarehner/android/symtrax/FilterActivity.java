@@ -17,8 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,12 +46,36 @@ public class FilterActivity extends AppCompatActivity implements LoaderManager.L
 
         setTitle("Set Filters");
 
+        // have to drop off the 'None' selection in the first[0] position
+        String[] FilterEmotions = new String[Konstants.EMOTIONS.length-1];
+        for (int i = 1; i< Konstants.EMOTIONS.length; i++)
+            FilterEmotions[i-1] = Konstants.EMOTIONS[i];
+
+
         // Damn better remember this complicated conversion
-        ArrayList<String> arrayEmotions = new ArrayList(Arrays.asList(Konstants.EMOTIONS));
+        ArrayList<String> arrayEmotions = new ArrayList(Arrays.asList(FilterEmotions));
         FilterEmotionArrayAdapter adapter = new FilterEmotionArrayAdapter(this, arrayEmotions);
 
         ListView listView = findViewById(R.id.left_list_view_emotion);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int pos, long id){
+
+                // Set the checkbox when clicking anywhere in the item row
+                CheckBox cb = v.findViewById(R.id.list_item_filter_emotion_checkbox);
+                if (cb.isChecked()){
+                    cb.setChecked(false);
+                } else {
+                    cb.setChecked(true);
+                }
+
+                TextView tv = v.findViewById(R.id.list_item_filter_emotions);
+                String s = tv.getText().toString();
+                Toast.makeText(getApplicationContext(), "Position: " + pos + "  " + s, Toast.LENGTH_LONG).show();
+            }
+        });
+
 
 
         ListView symptomListView = findViewById(R.id.right_list_view_symptom);

@@ -3,42 +3,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="edu.babarehner.android.symtrax.SymTraxActivity">
 
-    <item
-        android:id="@+id/action_symptom_activity"
-        android:orderInCategory="100"
-        android:title="@string/action_symptoms"
-        app:showAsAction="never" />
+    <group android:id="@+id/grp1">
+
+        <item
+            android:id="@+id/action_symptom_activity"
+            android:orderInCategory="100"
+            android:title="@string/action_symptoms"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_set_filters"
+            android:orderInCategory="100"
+            android:title="@string/action_set_filters"
+            app:showAsAction="never" />
+    </group>
 
 
-    <item
-        android:id="@+id/action_share_entire_db"
-        android:orderInCategory="100"
-        android:title="@string/share_entire_db"
-        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-        app:showAsAction="never"/>
+    <group android:id="@+id/grp_share">
+        <item
+            android:id="@+id/action_share_entire_db"
+            android:orderInCategory="100"
+            android:title="@string/share_entire_db"
+            app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+            app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_backup_db_to_storage"
-        android:orderInCategory="100"
-        android:title="@string/action_backup_db_to_storage"
-        app:showAsAction="never" />
+        <item
+            android:id="@+id/action_backup_db_to_storage"
+            android:orderInCategory="100"
+            android:title="@string/action_backup_db_to_storage"
+            app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_save_db_to_csv"
-        android:orderInCategory="100"
-        android:title="@string/action_save_db_to_csv"
-        app:showAsAction="never" />
+        <item
+            android:id="@+id/action_save_db_to_csv"
+            android:orderInCategory="100"
+            android:title="@string/action_save_db_to_csv"
+            app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        <!--
+        <item
+            android:id="@+id/action_settings"
+            android:orderInCategory="100"
+            android:title="@string/action_settings"
+            app:showAsAction="never" />
+        -->
+    </group>
 
-    <item
-        android:id="@+id/action_set_filters"
-        android:orderInCategory="100"
-        android:title="@string/action_set_filters"
-        app:showAsAction="never" />
+
 </menu>
 

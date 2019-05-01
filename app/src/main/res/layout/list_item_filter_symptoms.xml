@@ -15,7 +15,16 @@
         android:layout_height="wrap_content"
         android:checked="false"
         android:layout_gravity="center_vertical"
-        />
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="false"/>
+    <!-- eAndroid CheckBox classes have their own set of click and check listeners.
+     In order to avoid an interference between them and the ListView listener we’ve
+     set the preceding attributes in the CheckBox widget in the xml.
+     These would make the CheckBoxes neither clickable nor focusable separately
+     thereby letting the ListView row clicks function correctly.
+     -->
+
 
     <TextView
         android:id="@+id/list_item_symptoms"

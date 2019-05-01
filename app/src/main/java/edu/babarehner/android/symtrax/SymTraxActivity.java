@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -143,6 +144,9 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_symtrax, m);
 
+        //Create divider line in menu groups
+        MenuCompat.setGroupDividerEnabled(m, true);
+
         // relate mShareActionProvider to share e-mail menu item
         // initialize mShareActionProvider
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider
@@ -159,8 +163,8 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
         Context cntxt = this;
         ShareDataHelper bckupDB = new ShareDataHelper();
         switch (item.getItemId()) {
-            case (R.id.action_settings):
-                return true;
+            //case (R.id.action_settings):
+            //    return true;
             case (R.id.action_symptom_activity):
                 Intent intent = new Intent(SymTraxActivity.this, SymptomActivity.class);
                 startActivity(intent);
