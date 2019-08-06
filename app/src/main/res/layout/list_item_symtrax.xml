@@ -26,17 +26,17 @@
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_1_lis"
-        android:layout_width="1dp"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33"/>
+        app:layout_constraintGuide_percent="0.34"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_2_lis"
-        android:layout_width="1dp"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.66"/>
+        app:layout_constraintGuide_percent="0.68"/>
 
 
     <TextView

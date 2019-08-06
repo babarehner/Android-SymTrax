@@ -527,7 +527,8 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         mSpinVal[i] = "";
         Spinner sp = findViewById(resourceId);
         ArrayAdapter<String> csAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, cs);
+                //android.R.layout.simple_spinner_item, cs);
+                android.R.layout.simple_gallery_item, cs);
         // Specify the layout to use when the list of choices appear
         csAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(csAdapter); // apply the adapter to the spinner

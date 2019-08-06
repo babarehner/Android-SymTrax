@@ -28,7 +28,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                style="@style/EditTextHintStyle"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/pick_time"
@@ -41,7 +49,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                style="@style/EditTextHintStyle"/>
 
         </LinearLayout>
 
@@ -89,6 +98,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:spinnerMode="dropdown"
+                android:popupBackground="@color/colorPrimaryDark"
+                android:theme="@style/spinnerTheme"
                 android:visibility="visible" />
         </LinearLayout>
 
@@ -133,6 +144,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:spinnerMode="dropdown"
+                android:popupBackground="@color/colorPrimaryDark"
+                android:theme="@style/spinnerTheme"
                 android:visibility="visible" />
         </LinearLayout>
 
@@ -154,6 +167,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:spinnerMode="dropdown"
+                android:popupBackground="@color/colorPrimaryDark"
+                android:theme="@style/spinnerTheme"
                 android:visibility="visible" />
         </LinearLayout>
 
