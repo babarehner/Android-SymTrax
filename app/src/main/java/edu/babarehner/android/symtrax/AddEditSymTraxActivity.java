@@ -17,6 +17,7 @@
 
 package edu.babarehner.android.symtrax;
 
+import android.annotation.TargetApi;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,6 +26,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +34,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
@@ -46,6 +49,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -206,6 +210,9 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                 // CursorWrapper required when working with CursorLoader & SQLite DB
                 CursorWrapper cw = (CursorWrapper) parent.getItemAtPosition(pos);
                 mSpinSymptomVal = String.valueOf(cw.getString(1));
+                // Change the output string appearance
+                TextViewCompat.setTextAppearance(((TextView) view),android.R.style.TextAppearance_Small);
+                ((TextView) view).setTextColor(Color.BLACK);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -543,6 +550,10 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                 String selection = (String) parent.getItemAtPosition(position);
                 Log.v("RecordActivity", selection);
                 mSpinVal[i] = selection;  //store the selection for future reference
+                // change the output String font style- Use TextViewCompat for earlier apis
+                //((TextView) view).setTextAppearance(android.R.style.TextAppearance_Small);
+                TextViewCompat.setTextAppearance(((TextView) view),android.R.style.TextAppearance_Small);
+                ((TextView) view).setTextColor(Color.BLACK);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {

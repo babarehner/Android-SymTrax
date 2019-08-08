@@ -117,12 +117,13 @@
 
             <EditText
                 android:id="@+id/et_trigger"
+                style="@style/EditTextHintStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:hint="@string/trigger_hint"
-                android:inputType="text|textCapSentences|textMultiLine"
-                style="@style/EditTextHintStyle"/>
+                android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
+                android:singleLine="false" />
         </LinearLayout>
 
 
@@ -161,6 +162,8 @@
                 style="@style/CategoryStyle"
                 android:text="@string/emotion2" />
 
+
+
             <Spinner
                 android:id="@+id/sp_Emotion2"
                 android:layout_width="0dp"
@@ -169,7 +172,8 @@
                 android:spinnerMode="dropdown"
                 android:popupBackground="@color/colorPrimaryDark"
                 android:theme="@style/spinnerTheme"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:textStyle="italic" />
         </LinearLayout>
 
 
@@ -191,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:hint="@string/observation_hint"
-                android:inputType="text|textCapSentences|textMultiLine"
+                android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
                 style="@style/EditTextHintStyle"/>
         </LinearLayout>
 
@@ -214,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:hint="@string/outcome_hint"
-                android:inputType="text|textCapSentences|textMultiLine"
+                android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
                 style="@style/EditTextHintStyle"/>
         </LinearLayout>
 
