@@ -7,7 +7,7 @@
     <item
         android:id="@+id/action_save_filters"
         android:title="@string/action_save_filter"
-        android:icon="@drawable/ic_done"
+        android:icon="@drawable/ic_save_white_24dp"
         app:showAsAction="ifRoom" />
 
     <item
