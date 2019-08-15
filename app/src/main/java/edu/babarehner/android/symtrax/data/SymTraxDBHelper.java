@@ -43,7 +43,7 @@ import edu.babarehner.android.symtrax.data.SymTraxContract;
                  SymTraxContract.SymTraxTableSchema.SYM_TRAX_TABLE_NAME + " (" +
                  SymTraxContract.SymTraxTableSchema._IDST + " INTEGER PRIMARY KEY, " +
                  SymTraxContract.SymTraxTableSchema.C_DATE + " DATE_NOT_NULL, " +
-                 SymTraxContract.SymTraxTableSchema.C_TIME + " TEXT , " +
+                 SymTraxContract.SymTraxTableSchema.C_TIME + " TEXT, " +
                  SymTraxContract.SymTraxTableSchema.C_SYMPTOM + " TEXT, " +
                  SymTraxContract.SymTraxTableSchema.C_SEVERITY + " INTEGER, " +
                  SymTraxContract.SymTraxTableSchema.C_TRIGGER + " TEXT, " +

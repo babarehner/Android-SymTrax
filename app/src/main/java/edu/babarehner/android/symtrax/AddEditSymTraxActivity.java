@@ -52,8 +52,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -439,24 +441,56 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
      }
 
 
+     // This method is a candidate for refactoring
      private void saveRecord() {
 
          // read from input fields. Add date & time to get correct sort order for date + time
-         String strDateTime = mEditDate.getText().toString() + " " + mEditTime.getText().toString();
+         String strDate = mEditDate.getText().toString();
+         String strTime = mEditTime.getText().toString();
 
-         // convert string date to Linux date
-         SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy hh:mm", Locale.US);
-         // long ms = 0
-         try {
-             Date d = f.parse(strDateTime);
-             mMS = d.getTime(); // date-time in ms since 1/1/1970
-         } catch (ParseException e) {
-             e.printStackTrace();
+         // if the date or time field is left blank inform user
+         // that date has been set to current date or time.
+         if (mCurrentRecordUri == null & (TextUtils.isEmpty(strDate) || TextUtils.isEmpty(strTime))) {
+             // if (mCurrentRecordUri == null & TextUtils.isEmpty(strDateTime)) ||  {
+             Toast.makeText(this, getString(R.string.missing_date), Toast.LENGTH_LONG).show();
+             // return;  drops out if nothing
+         }
+
+
+         // check for empty time string from user
+         // if empty give strTime a default value of the current time
+         if (TextUtils.isEmpty(strTime)) {
+             long currentDateTime = System.currentTimeMillis();
+             Date currentDate = new Date(currentDateTime);
+             DateFormat tf = new SimpleDateFormat("HH:mm", Locale.US);
+             Calendar cal = Calendar.getInstance();
+             strTime = tf.format(cal.getTime());
+
+         }
+
+         // if NOT strDate is ""
+         if (!TextUtils.isEmpty(strDate)) {
+             // concatenate to prepare for date-time conversion of user entry to ms
+             String strDateTime = strDate + " " + strTime;
+
+             // convert string date to Linux date
+             // if user has not
+             SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy hh:mm", Locale.US);
+             try {
+                 Date d = f.parse(strDateTime);
+                 mMS = d.getTime(); // date-time in ms since 1/1/1970
+             } catch (ParseException e) {
+                 e.printStackTrace();
+             }
+         } else {
+             // if System millisecong time is 0, User has not entered a date
+             // Get today's date and time and save as default value in db if user not entered
+             mMS = System.currentTimeMillis();
          }
 
          // read from EditText and Spinner input fields
          // String date = mEditDate.getText().toString();
-         String time = mEditTime.getText().toString();
+         // String time = mEditTime.getText().toString();
          String symptom  = mSpinSymptomVal;
          String severity = mSpinVal[0];
          String trigger = mEditTrigger.getText().toString().trim();
@@ -465,15 +499,11 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
          String observation = mEditObservation.getText().toString().trim();
          String outcome = mEditOutcome.getText().toString().trim();
 
-         // if the date field is left blank or set to 0 ms on enetering a new record got do nothing
-         if (mCurrentRecordUri == null & TextUtils.isEmpty(strDateTime) || (mMS == 0)) {
-             Toast.makeText(this, getString(R.string.missing_date), Toast.LENGTH_LONG).show();
-             return;
-         }
+
 
          ContentValues values = new ContentValues();
          values.put(C_DATE, mMS);
-         values.put(C_TIME, time);
+         values.put(C_TIME, strTime);
          values.put(SymTraxContract.SymTraxTableSchema.C_SYMPTOM, symptom);
          values.put(C_SEVERITY, severity);
          values.put(C_TRIGGER, trigger);
