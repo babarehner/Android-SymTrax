@@ -33,17 +33,11 @@
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
     </style>
 
-    <!-- easiest method to change spinner item textcolor -->
+    <!-- easiest method to change spinner item textcolor Doesn't work below API 22-->
     <style name="spinnerTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textStyle">italic</item>
     </style>
-
-    <!-- easiest method to change spinner item textcolor -->
-    <style name="spinnerTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textColor">#000000</item>
-    </style>
-
 
     <style name="DateTextStyle" parent="AppTheme">
         <item name="android:textAppearance">?android:textAppearanceMedium</item>

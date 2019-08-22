@@ -99,7 +99,6 @@
                 android:layout_weight="3"
                 android:spinnerMode="dropdown"
                 android:popupBackground="@color/colorPrimaryDark"
-                android:theme="@style/spinnerTheme"
                 android:visibility="visible" />
         </LinearLayout>
 

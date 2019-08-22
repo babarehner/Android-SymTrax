@@ -199,7 +199,10 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
                 new int[] {android.R.id.text1},
                 0);
 
-        mSpinSymptomAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //mSpinSymptomAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // created my own spinner_dropdown_item
+        mSpinSymptomAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         mSpinSymptom.setAdapter(mSpinSymptomAdapter);
         mSpinSymptom.setSelection(0, false);
         // intialize mSpinSymptomVal to first item in spinner in case spinner not touched by user
@@ -566,8 +569,11 @@ import static edu.babarehner.android.symtrax.data.SymTraxContract.SymptomTableSc
         ArrayAdapter<String> csAdapter = new ArrayAdapter<>(this,
                 //android.R.layout.simple_spinner_item, cs);
                 android.R.layout.simple_gallery_item, cs);
+                // R.layout.severity_spinner_row, cs);
         // Specify the layout to use when the list of choices appear
-        csAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //csAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // created my own spinner_dropdown_item
+        csAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         sp.setAdapter(csAdapter); // apply the adapter to the spinner
 
         //CursorWrapper w = (CursorWrapper) mSpinSymptom.getItemAtPosition(0);
