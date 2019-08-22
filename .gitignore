@@ -15,3 +15,5 @@
 /build
 /captures
 .externalNativeBuild
+.idea/
+/.idea/
