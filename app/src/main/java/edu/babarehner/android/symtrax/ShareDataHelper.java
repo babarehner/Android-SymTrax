@@ -155,7 +155,7 @@ public class ShareDataHelper {
                 outputStreamWriter.flush();
                 fileOutput.getFD().sync();
                 outputStreamWriter.close();
-                Toast.makeText(context, "sum_trax csv saved to SymTrax folder", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "sym_trax csv saved to SymTrax folder", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
