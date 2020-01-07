@@ -61,7 +61,7 @@ import edu.babarehner.android.symtrax.data.SymTraxContract;
 
          sqLiteDatabase.execSQL(SQL_CREATE_SYMPTOMS_TABLE);
 
-         String[] symptoms = {"BP High", "Feel Faint", "Resting Heart Rate High"};
+         String[] symptoms = {"Crying", "Feel Faint", "Irregular Heartbeat", "Tense Muscles"};
 
 
          for (String each : symptoms) {
