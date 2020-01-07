@@ -183,7 +183,7 @@ public class SymTraxActivity extends AppCompatActivity implements LoaderManager.
             case (R.id.action_save_db_to_csv):
                 checkWritePermission();
                 bckupDB.writeCSVfile(cntxt);
-                return true;
+            return true;
             /* Not implemented at this time
             case (R.id.action_set_filters):
                 Intent filterIntent = new Intent(SymTraxActivity.this, FilterActivity.class);
