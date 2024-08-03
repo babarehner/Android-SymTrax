@@ -11,10 +11,11 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 1600010002,
-      "versionName": "1.0.1",
+      "versionCode": 1600010003,
+      "versionName": "1.0.3",
       "outputFile": "app-release.apk"
     }
   ],
-  "elementType": "File"
+  "elementType": "File",
+  "minSdkVersionForDexing": 16
 }

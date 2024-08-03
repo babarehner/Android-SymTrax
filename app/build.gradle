@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    // compileSdkVersion 35
+    // compileSdkVersion 28
     defaultConfig {
         compileSdk 35
         applicationId "edu.babarehner.android.symtrax"
