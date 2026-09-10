@@ -7,8 +7,8 @@ android {
         applicationId "edu.babarehner.android.symtrax"
         minSdkVersion 16
         targetSdkVersion 35
-        versionCode 1600010003
-        versionName "1.0.3"
+        versionCode 1600010004
+        versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
