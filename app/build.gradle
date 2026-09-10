@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     // compileSdkVersion 28
     defaultConfig {
-        compileSdk 35
+        compileSdk 36
         applicationId "edu.babarehner.android.symtrax"
-        minSdkVersion 16
-        targetSdkVersion 35
+        minSdk 16
+        targetSdk 36
         versionCode 1600010004
         versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

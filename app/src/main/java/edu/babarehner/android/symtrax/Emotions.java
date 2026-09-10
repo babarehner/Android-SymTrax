@@ -10,7 +10,7 @@ public class Emotions {
     public ArrayList<Emotions> emotions = null;
 
 
-    // provate constructor restricted to this class itself
+    // private constructor restricted to this class itself
     private Emotions(){
 
         emotions.add(eClass.addItemToArrayList("None", false));
@@ -45,7 +45,7 @@ public class Emotions {
 
 }
 
-/***
+/*
 // Java program implementing Singleton class
 // with getInstance() method
 class Singleton
@@ -102,4 +102,4 @@ class Main
         System.out.println("String from z is " + z.s);
     }
 }
-***/
+*/
